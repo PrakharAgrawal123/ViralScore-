@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+/* Base Body styling */
+body {
+  @apply antialiased text-slate-900 bg-slate-50 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300;
+}
+
+/* Custom Glassmorphism styles */
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-slate-200/50 dark:bg-slate-900/60 dark:border-slate-800/40;
+}
+
+.glass-card {
+  @apply bg-white/80 dark:bg-slate-900/70 backdrop-blur-lg border border-slate-200/60 dark:border-slate-800/50 shadow-xl shadow-slate-100/40 dark:shadow-none;
+}
+
+/* Soft glowing shadow effects */
+.glow-blue {
+  box-shadow: 0 0 40px -5px rgba(37, 99, 235, 0.15);
+}
+
+.glow-green {
+  box-shadow: 0 0 40px -5px rgba(22, 163, 74, 0.15);
+}
+
+.glow-amber {
+  box-shadow: 0 0 40px -5px rgba(217, 119, 6, 0.15);
+}
+
+.glow-red {
+  box-shadow: 0 0 40px -5px rgba(220, 38, 38, 0.15);
+}
+
+/* Floating animations */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1.5deg);
+  }
+}
+
+@keyframes float-slower {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-1deg);
+  }
+}
+
+@keyframes float-fast {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+.animate-float-slower {
+  animation: float-slower 9s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: float-fast 4s ease-in-out infinite;
+}
+
+.animate-gradient-bg {
+  background-size: 200% 200%;
+  animation: gradient-shift 12s ease infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 3s ease-in-out infinite;
+}
+
+/* Skeleton shimmer backgrounds */
+.shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.4) 25%,
+    rgba(203, 213, 225, 0.6) 50%,
+    rgba(226, 232, 240, 0.4) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 41, 59, 0.3) 25%,
+    rgba(51, 65, 85, 0.5) 50%,
+    rgba(30, 41, 59, 0.3) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Scrollbar customizations */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100 dark:bg-slate-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-700 rounded-full hover:bg-slate-400 dark:hover:bg-slate-600 transition-colors;
+}
+
+/* Hover lifts */
+.hover-lift {
+  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-none;
+}
