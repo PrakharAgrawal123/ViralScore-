@@ -50,11 +50,7 @@ It's like a grammar checker, but for **LinkedIn engagement.**
 
 ---
 
-## 🖥️ Screenshots
 
-> 📸 Screenshots will be added after deployment.
-
----
 
 ## 🛠️ Tech Stack
 
