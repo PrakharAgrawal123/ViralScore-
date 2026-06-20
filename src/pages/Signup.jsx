@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Zap, Mail, Lock, User, ShieldAlert } from 'lucide-react';
+import { Zap, Mail, Lock, User, ShieldAlert, RefreshCw } from 'lucide-react';
 import FloatingOrbs from '../components/FloatingOrbs';
 
 export default function Signup({ onLogin }) {
@@ -12,6 +12,7 @@ export default function Signup({ onLogin }) {
   const [error, setError] = useState('');
   const [shake, setShake] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const [nameFocused, setNameFocused] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
@@ -75,6 +76,91 @@ export default function Signup({ onLogin }) {
     navigate('/analyse');
   };
 
+  const handleGoogleLogin = async () => {
+    setError('');
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+    if (!clientId) {
+      // Simulation / demo mode
+      setIsGoogleLoading(true);
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      setIsGoogleLoading(false);
+      onLogin({
+        name: 'Google Creator',
+        email: 'google@creator.io',
+        initials: 'GC',
+        authType: 'google',
+        isDemo: true
+      });
+      navigate('/analyse');
+      return;
+    }
+
+    try {
+      if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
+        throw new Error('Google Identity Services library not loaded yet. Please try again.');
+      }
+
+      setIsGoogleLoading(true);
+
+      const client = window.google.accounts.oauth2.initTokenClient({
+        client_id: clientId,
+        scope: 'openid email profile',
+        callback: async (tokenResponse) => {
+          if (tokenResponse && tokenResponse.access_token) {
+            try {
+              const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: {
+                  Authorization: `Bearer ${tokenResponse.access_token}`
+                }
+              });
+
+              if (!res.ok) {
+                throw new Error('Failed to retrieve profile details from Google.');
+              }
+
+              const data = await res.json();
+              
+              let initials = 'GC';
+              if (data.name) {
+                const parts = data.name.split(' ');
+                initials = parts.map(p => p.charAt(0)).join('').toUpperCase().slice(0, 2);
+              } else if (data.email) {
+                initials = data.email.slice(0, 2).toUpperCase();
+              }
+
+              onLogin({
+                name: data.name || 'Google User',
+                email: data.email,
+                initials: initials,
+                picture: data.picture,
+                authType: 'google'
+              });
+
+              navigate('/analyse');
+            } catch (err) {
+              setError(err.message || 'An error occurred during Google Sign-In.');
+            } finally {
+              setIsGoogleLoading(false);
+            }
+          } else {
+            setError('Google Sign-In authorization failed.');
+            setIsGoogleLoading(false);
+          }
+        },
+        error_callback: (err) => {
+          setError(err.message || 'Google popup closed or failed.');
+          setIsGoogleLoading(false);
+        }
+      });
+
+      client.requestAccessToken();
+    } catch (err) {
+      setError(err.message || 'Google Sign-In initialization failed.');
+      setIsGoogleLoading(false);
+    }
+  };
+
   const shakeVariants = {
     shake: {
       x: [-10, 10, -10, 10, -5, 5, -2, 2, 0],
@@ -121,12 +207,12 @@ export default function Signup({ onLogin }) {
             <Zap className="h-6 w-6 fill-current animate-float-fast" />
           </div>
           <div className="flex justify-center items-center gap-2 mb-2">
-            <span className="text-xl font-bold tracking-tight gradient-text" style={{ animation: "logoPulse 3s ease-in-out infinite" }}>ViralScore</span>
+            <span className="text-2xl font-bold tracking-tight gradient-text" style={{ animation: "logoPulse 3s ease-in-out infinite" }}>ViralScore</span>
           </div>
           <h2 className="text-2xl font-extrabold tracking-tight text-white mt-2">
             Create your account
           </h2>
-          <p className="text-xs text-white/50 mt-1">
+          <p className="text-sm text-white/50 mt-1">
             Sign up to unlock advanced score tracking tools.
           </p>
         </div>
@@ -150,8 +236,8 @@ export default function Signup({ onLogin }) {
             <label 
               className={`absolute left-9 transition-all duration-200 pointer-events-none uppercase tracking-wider font-bold ${
                 nameFocused || name 
-                  ? 'top-[-8px] text-[11px] text-[#6366F1]' 
-                  : 'top-[13px] text-[13px] text-white/50'
+                  ? 'top-[-5px] text-[11px] text-[#6366F1]' 
+                  : 'top-[15px] text-[13px] text-white/50'
               }`}
             >
               Full Name
@@ -175,8 +261,8 @@ export default function Signup({ onLogin }) {
             <label 
               className={`absolute left-9 transition-all duration-200 pointer-events-none uppercase tracking-wider font-bold ${
                 emailFocused || email 
-                  ? 'top-[-8px] text-[11px] text-[#6366F1]' 
-                  : 'top-[13px] text-[13px] text-white/50'
+                  ? 'top-[-5px] text-[11px] text-[#6366F1]' 
+                  : 'top-[15px] text-[13px] text-white/50'
               }`}
             >
               Email Address
@@ -262,41 +348,51 @@ export default function Signup({ onLogin }) {
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-white/5" />
           </div>
-          <div className="relative flex justify-center text-xs uppercase font-bold text-white/30">
+          <div className="relative flex justify-center text-sm uppercase font-bold text-white/30">
             <span className="bg-[#0D0D1A] px-3">Or sign up with</span>
           </div>
         </div>
 
-        {/* Google OAuth Simulation */}
+        {/* Simulation Mode Developer Notice */}
+        {!import.meta.env.VITE_GOOGLE_CLIENT_ID && (
+          <div className="text-[11px] text-center text-[#A5B4FC] mb-3 bg-indigo-500/5 py-2 px-3 rounded-xl border border-indigo-500/10 font-medium">
+            💡 Google Client ID not configured. Running in Simulation/Demo Mode.
+          </div>
+        )}
+
+        {/* Google Authentication Button */}
         <button
-          onClick={() => {
-            onLogin({ name: 'Google Creator', email: 'google@creator.io', initials: 'GC' });
-            navigate('/analyse');
-          }}
-          className="w-full flex items-center justify-center gap-2.5 rounded-xl btn-glass px-4 py-2.5 text-sm font-semibold hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer shadow-sm"
+          type="button"
+          onClick={handleGoogleLogin}
+          disabled={isLoading || isGoogleLoading}
+          className="w-full flex items-center justify-center gap-2.5 rounded-xl btn-glass px-4 py-2.5 text-sm font-semibold hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer shadow-sm disabled:opacity-50 disabled:pointer-events-none"
         >
-          <svg className="h-4.5 w-4.5 shrink-0" viewBox="0 0 24 24">
-            <path
-              fill="#EA4335"
-              d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.65 14.99 1 12 1 7.35 1 3.39 3.65 1.5 7.5l3.86 3C6.27 7.74 8.92 5.04 12 5.04z"
-            />
-            <path
-              fill="#4285F4"
-              d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.29 1.48-1.14 2.73-2.4 3.58l3.73 2.89c2.18-2.01 3.7-4.97 3.7-8.62z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.36 14.5c-.24-.72-.38-1.49-.38-2.5s.14-1.78.38-2.5L1.5 6.5C.54 8.21 0 10.1 0 12s.54 3.79 1.5 5.5l3.86-3z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.73-2.89c-1.04.7-2.38 1.11-4.23 1.11-3.08 0-5.73-2.7-6.64-5.46L1.5 16.5C3.39 20.35 7.35 23 12 23z"
-            />
-          </svg>
-          <span>Continue with Google</span>
+          {isGoogleLoading ? (
+            <RefreshCw className="h-4.5 w-4.5 shrink-0 animate-spin text-[#A5B4FC]" />
+          ) : (
+            <svg className="h-4.5 w-4.5 shrink-0" viewBox="0 0 24 24">
+              <path
+                fill="#EA4335"
+                d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.65 14.99 1 12 1 7.35 1 3.39 3.65 1.5 7.5l3.86 3C6.27 7.74 8.92 5.04 12 5.04z"
+              />
+              <path
+                fill="#4285F4"
+                d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.29 1.48-1.14 2.73-2.4 3.58l3.73 2.89c2.18-2.01 3.7-4.97 3.7-8.62z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M5.36 14.5c-.24-.72-.38-1.49-.38-2.5s.14-1.78.38-2.5L1.5 6.5C.54 8.21 0 10.1 0 12s.54 3.79 1.5 5.5l3.86-3z"
+              />
+              <path
+                fill="#34A853"
+                d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.73-2.89c-1.04.7-2.38 1.11-4.23 1.11-3.08 0-5.73-2.7-6.64-5.46L1.5 16.5C3.39 20.35 7.35 23 12 23z"
+              />
+            </svg>
+          )}
+          <span>{isGoogleLoading ? 'Connecting to Google...' : 'Continue with Google'}</span>
         </button>
 
-        <div className="text-center text-xs font-bold text-white/40 mt-8">
+        <div className="text-center text-sm font-bold text-white/40 mt-8">
           Already have an account?{' '}
           <Link to="/login" className="text-[#6366F1] hover:text-[#8B5CF6] transition-colors">
             Login

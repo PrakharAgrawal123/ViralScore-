@@ -10,25 +10,53 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import useAnalyser from './hooks/useAnalyser';
 
+function ProtectedRoute({ user, children }) {
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
 function AppRoutes({ user, analyser, handleLogin }) {
   const location = useLocation();
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Landing analyser={analyser} user={user} />} />
-        <Route path="/analyse" element={<Analyser analyser={analyser} user={user} />} />
-        <Route path="/dashboard" element={<Dashboard analyser={analyser} user={user} />} />
-        <Route path="/history" element={<History analyser={analyser} user={user} />} />
+        <Route 
+          path="/analyse" 
+          element={
+            <ProtectedRoute user={user}>
+              <Analyser analyser={analyser} user={user} />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute user={user}>
+              <Dashboard analyser={analyser} user={user} />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/history" 
+          element={
+            <ProtectedRoute user={user}>
+              <History analyser={analyser} user={user} />
+            </ProtectedRoute>
+          } 
+        />
         
         <Route 
           path="/login" 
-          element={user ? <Navigate to="/analyse" /> : <Login onLogin={handleLogin} />} 
+          element={user ? <Navigate to="/analyse" replace /> : <Login onLogin={handleLogin} />} 
         />
         <Route 
           path="/signup" 
-          element={user ? <Navigate to="/analyse" /> : <Signup onLogin={handleLogin} />} 
+          element={user ? <Navigate to="/analyse" replace /> : <Signup onLogin={handleLogin} />} 
         />
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
   );
@@ -37,11 +65,7 @@ function AppRoutes({ user, analyser, handleLogin }) {
 export default function App() {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('viralscore_user');
-    return savedUser ? JSON.parse(savedUser) : {
-      name: 'Alex Creator',
-      email: 'alex@creator.io',
-      initials: 'AC'
-    };
+    return savedUser ? JSON.parse(savedUser) : null;
   });
 
   const analyser = useAnalyser();

@@ -217,7 +217,7 @@ export default function Landing() {
                     <h4 className="text-base font-bold text-white leading-tight mb-2">
                       {feat.title}
                     </h4>
-                    <p className="text-xs text-white/50 leading-relaxed">
+                    <p className="text-sm text-white/50 leading-relaxed">
                       {feat.description}
                     </p>
                   </div>

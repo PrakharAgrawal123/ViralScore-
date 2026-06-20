@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Menu, X, Sun, Moon, LogOut } from 'lucide-react';
 
@@ -11,6 +11,12 @@ export default function Navbar({ user, onLogout }) {
   const [scrolled, setScrolled] = useState(false);
   
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogoutClick = () => {
+    onLogout();
+    navigate('/');
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -130,15 +136,24 @@ export default function Navbar({ user, onLogout }) {
 
             {user ? (
               <div className="flex items-center space-x-3 pl-2 border-l border-white/10">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/10 text-[#A5B4FC] font-semibold text-sm border border-indigo-500/20">
-                  {user.initials}
-                </div>
+                {user.picture ? (
+                  <img
+                    src={user.picture}
+                    alt={user.name}
+                    className="h-9 w-9 rounded-xl object-cover border border-indigo-500/20 shadow-sm"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/10 text-[#A5B4FC] font-semibold text-sm border border-indigo-500/20">
+                    {user.initials}
+                  </div>
+                )}
                 <div className="text-left hidden lg:block">
                   <div className="text-xs font-semibold text-white/90">{user.name}</div>
                   <div className="text-[10px] text-white/50">{user.email}</div>
                 </div>
                 <button
-                  onClick={onLogout}
+                  onClick={handleLogoutClick}
                   className="flex h-8 w-8 items-center justify-center rounded-lg text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
                   title="Logout"
                 >
@@ -214,9 +229,18 @@ export default function Navbar({ user, onLogout }) {
               {user ? (
                 <div className="flex items-center justify-between px-3">
                   <div className="flex items-center space-x-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-[#A5B4FC] font-semibold border border-indigo-500/20">
-                      {user.initials}
-                    </div>
+                    {user.picture ? (
+                      <img
+                        src={user.picture}
+                        alt={user.name}
+                        className="h-10 w-10 rounded-xl object-cover border border-indigo-500/20 shadow-sm"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-[#A5B4FC] font-semibold border border-indigo-500/20">
+                        {user.initials}
+                      </div>
+                    )}
                     <div>
                       <div className="text-sm font-semibold text-white/90">{user.name}</div>
                       <div className="text-xs text-white/50">{user.email}</div>
@@ -224,7 +248,7 @@ export default function Navbar({ user, onLogout }) {
                   </div>
                   <button
                     onClick={() => {
-                      onLogout();
+                      handleLogoutClick();
                       setIsOpen(false);
                     }}
                     className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-500/10 text-red-400 transition-all"

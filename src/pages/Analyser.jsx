@@ -82,7 +82,7 @@ export default function Analyser({ analyser, user }) {
             <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
               Draft Analyser
             </h1>
-            <p className="text-white/50 text-sm mt-1">
+            <p className="text-white/50 text-base mt-1">
               Write or paste your LinkedIn post draft to predict engagement metrics and correct style errors.
             </p>
           </div>
@@ -93,7 +93,7 @@ export default function Analyser({ analyser, user }) {
                 setInputText('');
                 clearCurrentAnalysis();
               }}
-              className="self-start md:self-auto flex items-center gap-1.5 btn-glass px-3.5 py-2 text-xs font-semibold cursor-pointer transition-all"
+              className="self-start md:self-auto flex items-center gap-1.5 btn-glass px-3.5 py-2 text-sm font-semibold cursor-pointer transition-all"
             >
               <RefreshCw className="h-3.5 w-3.5" />
               Reset Editor
@@ -111,11 +111,11 @@ export default function Analyser({ analyser, user }) {
               <div className="flex justify-between items-center pb-2 border-b border-white/5">
                 <div className="flex items-center space-x-2">
                   <FileText className="h-4 w-4 text-[#6366F1]" />
-                  <span className="text-sm font-bold uppercase tracking-wider text-white/70">
+                  <span className="text-base font-bold uppercase tracking-wider text-white/70">
                     Compose Draft
                   </span>
                 </div>
-                <span className="text-[10px] font-bold text-white/30">
+                <span className="text-[15px] font-bold text-white/30">
                   Max 3,000 characters
                 </span>
               </div>
@@ -146,7 +146,7 @@ export default function Analyser({ analyser, user }) {
                 </div>
 
                 {/* Real-time counters below textarea */}
-                <div className="flex flex-wrap items-center justify-between gap-4 text-xs font-semibold text-white/55">
+                <div className="flex flex-wrap items-center justify-between gap-4 text-sm font-semibold text-white/55">
                   <div className="flex items-center space-x-4">
                     <span className="flex items-center">
                       <BarChart className="mr-1 h-3.5 w-3.5" />
@@ -158,7 +158,7 @@ export default function Analyser({ analyser, user }) {
                     </span>
                   </div>
                   
-                  <span className={charCount > 2800 ? 'text-red-400' : 'text-white/30'}>
+                  <span className={charCount > 2800 ? 'text-red-500' : 'text-white/30'}>
                     {charCount.toLocaleString()} / 3,000 chars
                   </span>
                 </div>
@@ -232,7 +232,7 @@ export default function Analyser({ analyser, user }) {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <h4 className="text-xs font-bold uppercase tracking-widest text-white/40">Sentence Analysis</h4>
-                      <span className="text-[10px] text-white/30 font-bold">Hover labels to learn more</span>
+                      <span className="text-[15px] text-white/30 font-bold">Hover labels to learn more</span>
                     </div>
                     
                     <div className="flex flex-col gap-2.5 max-h-[300px] overflow-y-auto pr-1">
@@ -247,11 +247,11 @@ export default function Analyser({ analyser, user }) {
                     <>
                       <hr className="border-white/5" />
                       <div className="rounded-xl bg-[#6366F1]/10 p-4 border border-[#6366F1]/20">
-                        <div className="flex items-center space-x-2 text-[#A5B4FC] font-bold text-xs uppercase tracking-wider mb-1.5">
+                        <div className="flex items-center space-x-2 text-[#A5B4FC] font-bold text-sm uppercase tracking-wider mb-1.5">
                           <Calendar className="h-4 w-4" />
                           <span>Best Time to Post</span>
                         </div>
-                        <p className="text-xs leading-relaxed text-white/70 font-medium">
+                        <p className="text-[15px] leading-relaxed text-white/70 font-medium">
                           {currentAnalysis.bestTime}
                         </p>
                       </div>
@@ -293,12 +293,12 @@ export default function Analyser({ analyser, user }) {
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6366F1]/10 text-[#A5B4FC] mb-6 animate-float-fast">
                     <Sparkles className="h-6 w-6" />
                   </div>
-                  <h3 className="text-sm font-bold text-white mb-2">No Analysis Done</h3>
-                  <p className="text-xs leading-relaxed text-white/40 max-w-[240px] mx-auto mb-6">
+                  <h3 className="text-base font-bold text-white mb-2">No Analysis Done</h3>
+                  <p className="text-sm leading-relaxed text-white/40 max-w-[240px] mx-auto mb-6">
                     Write or paste your LinkedIn post draft on the left and tap the button to check it with AI.
                   </p>
                   <div className="flex justify-center">
-                    <span className="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-[#A5B4FC] bg-[#6366F1]/10 px-3 py-1.5 rounded-lg border border-[#6366F1]/20">
+                    <span className="inline-flex items-center text-[13px] font-bold uppercase tracking-wider text-[#A5B4FC] bg-[#6366F1]/10 px-3 py-1.5 rounded-lg border border-[#6366F1]/20">
                       Awaiting Draft
                     </span>
                   </div>

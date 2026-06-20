@@ -77,7 +77,7 @@ export default function Dashboard({ analyser }) {
           <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
             <span className="gradient-text">Creator Dashboard</span>
           </h1>
-          <p className="text-white/50 text-sm mt-1">
+          <p className="text-white/50 text-base mt-1">
             Monitor your cumulative analytics, historic score updates, and frequently flagged jargon words.
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function Dashboard({ analyser }) {
           />
         </motion.div>
 
-        {/* Charts Split Layout */}
+        {/* Charts Split Layout */} 
         <div className="grid gap-8 lg:grid-cols-2 mb-8">
           
           {/* Score Over Time Line Chart */}

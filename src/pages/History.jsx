@@ -82,7 +82,7 @@ export default function History({ analyser }) {
           <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
             <span className="gradient-text">Analysis Log</span>
           </h1>
-          <p className="text-white/50 text-sm mt-1">
+          <p className="text-white/50 text-base mt-1">
             Search, filter, delete, or retrieve historical post reports back to the text analyser workspace.
           </p>
         </div>
@@ -100,7 +100,7 @@ export default function History({ analyser }) {
               value={searchQuery}
               onChange={handleSearchChange}
               placeholder="Search posts by keyword..."
-              className="w-full pl-10 pr-4 py-2.5 glass-input text-sm text-white/90 placeholder:text-white/25 focus:outline-none"
+              className="w-full pl-10 pr-4 py-2.5 glass-input text-base text-white/90 placeholder:text-white/25 focus:outline-none"
             />
           </div>
 
@@ -110,7 +110,7 @@ export default function History({ analyser }) {
               <button
                 key={tab}
                 onClick={() => setActiveFilter(tab)}
-                className={`rounded-lg px-4 py-2 text-xs font-bold cursor-pointer transition-all ${
+                className={`rounded-lg px-4 py-2 text-sm font-bold cursor-pointer transition-all ${
                   activeFilter === tab
                     ? 'btn-glow'
                     : 'btn-glass'
@@ -160,10 +160,10 @@ export default function History({ analyser }) {
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-[#A5B4FC] mb-6 animate-float-fast">
                 {searchQuery ? <AlertCircle className="h-6 w-6" /> : <BarChart className="h-6 w-6" />}
               </div>
-              <h3 className="text-sm font-bold text-white mb-2">
+              <h3 className="text-base font-bold text-white mb-2">
                 {searchQuery ? 'No Matching Results' : 'No Historic Analytics'}
               </h3>
-              <p className="text-xs leading-relaxed text-white/40 mb-6 max-w-[280px] mx-auto">
+              <p className="text-sm leading-relaxed text-white/40 mb-6 max-w-[280px] mx-auto">
                 {searchQuery 
                   ? 'Try modifying your keyword search parameters or category filter selectors.'
                   : 'A list of your analysed drafts will appear here. Start by writing in the Analyser!'}
@@ -174,7 +174,7 @@ export default function History({ analyser }) {
                     setSearchQuery('');
                     setActiveFilter('All');
                   }}
-                  className="inline-flex items-center gap-1.5 btn-glass px-4 py-2 text-xs font-semibold cursor-pointer transition-all"
+                  className="inline-flex items-center gap-1.5 btn-glass px-4 py-2 text-sm font-semibold cursor-pointer transition-all"
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
                   Clear Filters
