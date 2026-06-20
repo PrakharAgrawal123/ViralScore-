@@ -302,9 +302,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 **Prakhar Agrawal**
 
-[![GitHub](https://img.shields.io/badge/GitHub-PrakharAgrawal123-181717?style=flat-square&logo=github)](https://github.com/PrakharAgrawal123)
 
----
 
 <div align="center">
 
