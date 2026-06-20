@@ -87,7 +87,7 @@ export default function Navbar({ user, onLogout }) {
               <Link
                 key={link.name}
                 to={link.path}
-                className="relative px-1 py-2 text-sm font-medium transition-colors duration-200"
+                className="relative px-1 py-2 text-base font-medium transition-colors duration-200"
               >
                 <span 
                   className="transition-colors duration-200"

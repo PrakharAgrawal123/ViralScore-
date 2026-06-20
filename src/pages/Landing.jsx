@@ -106,7 +106,7 @@ export default function Landing() {
                 }}
               >
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-[10px] font-bold text-white/40">Post Draft Preview</span>
+                  <span className="text-[15px] font-bold text-white/40">Post Draft Preview</span>
                   <span className="font-extrabold text-sm text-[#A5B4FC]">{card.score} Score</span>
                 </div>
                 <p className="text-xs text-white/60 italic truncate font-medium">"{card.text}"</p>
@@ -119,7 +119,7 @@ export default function Landing() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center space-x-2 rounded-full px-3 py-1 text-xs font-semibold"
+              className="inline-flex items-center space-x-2 rounded-full px-3 py-1 text-base font-semibold"
               style={{
                 border: "1px solid rgba(99,102,241,0.4)",
                 background: "rgba(99,102,241,0.1)",
@@ -187,11 +187,11 @@ export default function Landing() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             
             <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[#6366F1]">Features Checklist</h2>
-              <h3 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">
+              <h2 className="text-base font-bold uppercase tracking-widest text-[#6366F1]">Features Checklist</h2>
+              <h3 className="text-4xl font-extrabold text-white tracking-tight sm:text-4xl">
                 Engineered for High-Impact Copy
               </h3>
-              <p className="text-white/50 max-w-xl mx-auto text-sm leading-relaxed">
+              <p className="text-white/50 max-w-xl mx-auto text-base leading-relaxed">
                 Every detail is calibrated to help your drafts escape the bottom feeds and gain real organic traction.
               </p>
             </div>
@@ -233,11 +233,11 @@ export default function Landing() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             
             <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[#6366F1]">Social Proof</h2>
-              <h3 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">
+              <h2 className="text-base font-bold uppercase tracking-widest text-[#6366F1]">Social Proof</h2>
+              <h3 className="text-4xl font-extrabold text-white tracking-tight sm:text-4xl">
                 Backed by Top Networkers
               </h3>
-              <p className="text-white/50 max-w-xl mx-auto text-sm leading-relaxed">
+              <p className="text-white/50 max-w-xl mx-auto text-base leading-relaxed">
                 Discover how executive coaches, startup founders, and technical creators use our analyser to improve conversions.
               </p>
             </div>
@@ -264,12 +264,12 @@ export default function Landing() {
                   </div>
                   
                   <div className="flex items-center space-x-3 border-t border-white/5 pt-4">
-                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white font-bold text-sm ${test.color}`}>
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white font-bold text-base ${test.color}`}>
                       {test.initials}
                     </div>
                     <div>
-                      <h5 className="text-xs font-bold text-white">{test.author}</h5>
-                      <p className="text-[10px] text-white/40 font-semibold">{test.title}</p>
+                      <h5 className="text-lg font-bold text-white">{test.author}</h5>
+                      <p className="text-[15px] text-white/40 font-semibold">{test.title}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -287,13 +287,13 @@ export default function Landing() {
               {/* Logo */}
               <div className="flex items-center space-x-2">
                 <Zap className="h-5 w-5 text-[#6366F1]" />
-                <span className="text-base font-bold tracking-tight text-white">
+                <span className="text-lg font-bold tracking-tight text-white">
                   Viral<span className="text-[#6366F1]">Score</span>
                 </span>
               </div>
 
               {/* Links */}
-              <div className="flex flex-wrap justify-center gap-6 text-xs text-white/50 font-medium">
+              <div className="flex flex-wrap justify-center gap-6 text-base text-white/50 font-medium">
                 <Link to="/analyse" className="hover:text-[#6366F1] transition-colors">Draft Analyser</Link>
                 <Link to="/dashboard" className="hover:text-[#6366F1] transition-colors">Performance Dashboard</Link>
                 <Link to="/history" className="hover:text-[#6366F1] transition-colors">Analysis Log</Link>
@@ -302,7 +302,7 @@ export default function Landing() {
               </div>
 
               {/* Copyright */}
-              <span className="text-xs text-white/30 font-medium">
+              <span className="text-base text-white/30 font-medium">
                 © {new Date().getFullYear()} ViralScore. All rights reserved.
               </span>
 
