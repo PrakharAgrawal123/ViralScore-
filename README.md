@@ -184,42 +184,34 @@ Full **JWT authentication** + **Google OAuth 2.0** social login with bcrypt pass
 ## 📁 &nbsp;Project Structure
 
 ```
+
 LinkedIn-Post-Virality-Predictor/
 │
-├── 📂 backend/
-│   ├── 🐍 app.py                  ← Flask server + config
-│   ├── 🔐 auth_routes.py          ← Login, signup, Google OAuth
-│   ├── 🗃️  models.py               ← SQLAlchemy User model
-│   ├── 🤖 predictor.py            ← ML model inference
-│   ├── 🔍 analyzer.py             ← Sentence classification
-│   ├── ✍️  rewriter.py             ← OpenAI rewrite integration
-│   ├── 📂 model/
-│   │   ├── train_model.py         ← Training script
-│   │   └── virality_model.pkl     ← Saved trained model
-│   ├── 🔒 .env                    ← Secrets (NOT committed)
-│   └── 📋 requirements.txt
+├── 📂 frontend/
+│   ├── 📂 public/
+│   ├── 📂 src/
+│   │   ├── 📂 assets/
+│   │   ├── 📂 components/
+│   │   ├── 📂 data/
+│   │   ├── 📂 hooks/
+│   │   ├── 📂 pages/
+│   │   ├── App.jsx
+│   │   ├── App.css
+│   │   ├── index.css
+│   │   └── main.jsx
+│   │
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── postcss.config.js
+│   ├── tailwind.config.js
+│   └── vite.config.js
 │
-└── 📂 frontend/
-    └── 📂 src/
-        ├── 📂 components/
-        │   ├── Navbar.jsx
-        │   ├── ScoreRing.jsx      ← Animated SVG score circle
-        │   ├── SentenceChip.jsx   ← Color-coded sentence pills
-        │   ├── GlassCard.jsx      ← Reusable glass UI card
-        │   ├── FloatingOrbs.jsx   ← Background glow orbs
-        │   └── MetricCard.jsx
-        ├── 📂 pages/
-        │   ├── Landing.jsx
-        │   ├── Analyser.jsx
-        │   ├── Dashboard.jsx
-        │   ├── History.jsx
-        │   ├── Login.jsx
-        │   ├── Signup.jsx
-        │   └── AuthCallback.jsx   ← Google OAuth callback
-        ├── 📂 context/
-        │   └── AuthContext.jsx    ← Global auth state
-        └── 📂 hooks/
-            └── useAnalyser.js
+└── README.md
+
 ```
 
 <br/>
