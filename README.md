@@ -184,6 +184,7 @@ Full **JWT authentication** + **Google OAuth 2.0** social login with bcrypt pass
 ## 📁 &nbsp;Project Structure
 
 ```
+
 LinkedIn-Post-Virality-Predictor/
 │
 ├── 📂 frontend/
@@ -211,6 +212,7 @@ LinkedIn-Post-Virality-Predictor/
 │
 └── README.md
 
+```
 
 <br/>
 
