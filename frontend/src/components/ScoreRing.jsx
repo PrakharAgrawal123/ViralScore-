@@ -20,25 +20,25 @@ export default function ScoreRing({ score = 0, size = 160 }) {
     if (val < 40) {
       return {
         gradientId: 'grad-red',
-        text: 'text-red-505',
-        glow: 'shadow-[0_0_20px_rgba(239,68,68,0.2)]',
-        bgBadge: 'bg-red-500/10 text-red-400 border border-red-500/20',
+        text: 'text-red-600 dark:text-red-400',
+        glow: 'shadow-[0_0_20px_rgba(239,68,68,0.15)] dark:shadow-[0_0_20px_rgba(239,68,68,0.2)]',
+        bgBadge: 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20',
         label: 'Needs Work'
       };
     } else if (val < 70) {
       return {
         gradientId: 'grad-amber',
-        text: 'text-amber-505',
-        glow: 'shadow-[0_0_20px_rgba(245,158,11,0.2)]',
-        bgBadge: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+        text: 'text-amber-600 dark:text-amber-400',
+        glow: 'shadow-[0_0_20px_rgba(245,158,11,0.15)] dark:shadow-[0_0_20px_rgba(245,158,11,0.2)]',
+        bgBadge: 'bg-amber-500/10 text-amber-650 dark:text-amber-400 border border-amber-500/20',
         label: 'Average'
       };
     } else {
       return {
         gradientId: 'grad-green',
-        text: 'text-[#A5B4FC]',
-        glow: 'shadow-[0_0_20px_rgba(99,102,241,0.2)]',
-        bgBadge: 'bg-[#6366F1]/10 text-[#A5B4FC] border border-[#6366F1]/20',
+        text: 'text-indigo-600 dark:text-[#A5B4FC]',
+        glow: 'shadow-[0_0_20px_rgba(99,102,241,0.15)] dark:shadow-[0_0_20px_rgba(99,102,241,0.2)]',
+        bgBadge: 'bg-[#6366F1]/10 text-indigo-600 dark:text-[#A5B4FC] border border-[#6366F1]/20',
         label: 'Viral Potential'
       };
     }
@@ -55,7 +55,7 @@ export default function ScoreRing({ score = 0, size = 160 }) {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className={`relative flex items-center justify-center p-3 rounded-full bg-slate-950/40 border border-white/5 ${colors.glow} transition-shadow duration-500`}>
+      <div className={`relative flex items-center justify-center p-3 rounded-full bg-slate-100/60 dark:bg-slate-950/40 border border-slate-200/60 dark:border-white/5 ${colors.glow} transition-shadow duration-500`}>
         <svg width={size} height={size} className="transform -rotate-90">
           <defs>
             <linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -77,8 +77,7 @@ export default function ScoreRing({ score = 0, size = 160 }) {
             cx={size / 2}
             cy={size / 2}
             r={radius + strokeWidth + 6}
-            className="fill-transparent"
-            stroke="rgba(255, 255, 255, 0.08)"
+            className="fill-transparent stroke-slate-300 dark:stroke-white/10"
             strokeWidth={1}
             strokeDasharray="4 8"
             style={{ transformOrigin: "center" }}
@@ -115,7 +114,7 @@ export default function ScoreRing({ score = 0, size = 160 }) {
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            className="stroke-white/5 fill-transparent"
+            className="stroke-slate-205 dark:stroke-white/5 fill-transparent"
             strokeWidth={strokeWidth}
           />
           {/* Animated score circle fill */}
@@ -139,7 +138,7 @@ export default function ScoreRing({ score = 0, size = 160 }) {
           <span className={`text-4xl font-extrabold tracking-tight ${colors.text}`}>
             {displayScore}
           </span>
-          <span className="text-[10px] uppercase font-bold tracking-wider text-white/30">
+          <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 dark:text-white/30">
             out of 100
           </span>
         </div>

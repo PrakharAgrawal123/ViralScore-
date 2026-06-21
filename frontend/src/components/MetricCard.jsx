@@ -45,11 +45,11 @@ export default function MetricCard({ title, value, subtext, icon: Icon, trend })
       <div className="flex justify-between items-start">
         <div>
           {/* Label */}
-          <p className="text-xs font-semibold uppercase tracking-wider text-white/50">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-white/50">
             {title}
           </p>
           {/* Main Stat Score */}
-          <h3 className="mt-2 text-[32px] font-bold tracking-tight text-white">
+          <h3 className="mt-2 text-[32px] font-bold tracking-tight text-slate-900 dark:text-white">
             {isBenchmark ? `${displayValue}/100` : displayValue}
           </h3>
         </div>
@@ -74,10 +74,10 @@ export default function MetricCard({ title, value, subtext, icon: Icon, trend })
             className="inline-flex items-center rounded-lg px-2.5 py-0.5 text-xs font-bold"
             style={trend.type === 'positive' ? {
               background: "rgba(16, 185, 129, 0.15)",
-              color: "#6EE7B7"
+              color: "#10B981"
             } : {
               background: "rgba(239, 68, 68, 0.15)",
-              color: "#FCA5A5"
+              color: "#EF4444"
             }}
           >
             {trend.type === 'positive' ? (
@@ -88,7 +88,7 @@ export default function MetricCard({ title, value, subtext, icon: Icon, trend })
             {trend.value}
           </span>
         )}
-        <span className="text-xs text-white/40 font-medium">
+        <span className="text-xs text-slate-400 dark:text-white/40 font-medium">
           {subtext}
         </span>
       </div>

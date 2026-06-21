@@ -280,6 +280,8 @@ export default function useAnalyser() {
 
   // Update a post inside history after rewrite copy
   const applyRewrite = (postId, originalText, newText) => {
+    let updatedPostObj = null;
+
     setPosts(prev => prev.map(post => {
       if (post.id !== postId) return post;
 
@@ -316,6 +318,9 @@ export default function useAnalyser() {
         estimatedReach = `${(newScore * 400).toLocaleString()} - ${(newScore * 1200).toLocaleString()} views`;
       } else if (newScore < 40) {
         status = 'Needs Work';
+        estimatedReach = '200 - 800 views';
+      } else {
+        estimatedReach = `${(newScore * 80).toLocaleString()} - ${(newScore * 180).toLocaleString()} views`;
       }
 
       // If it went up, update "posts improved" stat
@@ -326,7 +331,7 @@ export default function useAnalyser() {
         }));
       }
 
-      return {
+      const updated = {
         ...post,
         content: updatedContent,
         score: newScore,
@@ -335,7 +340,14 @@ export default function useAnalyser() {
         sentences: updatedSentences,
         rewrites: updatedRewrites
       };
+      
+      updatedPostObj = updated;
+      return updated;
     }));
+
+    if (updatedPostObj && currentAnalysis && currentAnalysis.id === postId) {
+      setCurrentAnalysis(updatedPostObj);
+    }
   };
 
   const loadPostToAnalyser = (post) => {

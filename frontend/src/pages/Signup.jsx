@@ -209,10 +209,10 @@ export default function Signup({ onLogin }) {
           <div className="flex justify-center items-center gap-2 mb-2">
             <span className="text-2xl font-bold tracking-tight gradient-text" style={{ animation: "logoPulse 3s ease-in-out infinite" }}>ViralScore</span>
           </div>
-          <h2 className="text-2xl font-extrabold tracking-tight text-white mt-2">
+          <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white mt-2">
             Create your account
           </h2>
-          <p className="text-sm text-white/50 mt-1">
+          <p className="text-sm text-slate-550 dark:text-white/50 mt-1 font-medium">
             Sign up to unlock advanced score tracking tools.
           </p>
         </div>
@@ -222,7 +222,7 @@ export default function Signup({ onLogin }) {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex items-start space-x-2 rounded-xl bg-red-500/10 text-red-400 p-3 text-xs font-semibold mb-6 border border-red-500/20"
+            className="flex items-start space-x-2 rounded-xl bg-red-500/10 text-red-650 dark:text-red-400 p-3 text-xs font-semibold mb-6 border border-red-500/20"
           >
             <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />
             <span>{error}</span>
@@ -237,12 +237,12 @@ export default function Signup({ onLogin }) {
               className={`absolute left-9 transition-all duration-200 pointer-events-none uppercase tracking-wider font-bold ${
                 nameFocused || name 
                   ? 'top-[-5px] text-[11px] text-[#6366F1]' 
-                  : 'top-[15px] text-[13px] text-white/50'
+                  : 'top-[15px] text-[13px] text-slate-400 dark:text-white/50'
               }`}
             >
               Full Name
             </label>
-            <span className="absolute top-[17px] left-3 text-white/40">
+            <span className="absolute top-[17px] left-3 text-slate-400 dark:text-white/40">
               <User className="h-4 w-4" />
             </span>
             <input
@@ -252,7 +252,7 @@ export default function Signup({ onLogin }) {
               onBlur={() => setNameFocused(false)}
               onChange={(e) => setName(e.target.value)}
               placeholder={(nameFocused || name) ? "Alex Creator" : ""}
-              className="w-full pl-9 pr-4 py-2.5 glass-input text-sm text-white/90 placeholder:text-white/25 focus:outline-none"
+              className="w-full pl-9 pr-4 py-2.5 glass-input text-sm text-slate-800 dark:text-white/90 placeholder:text-slate-400 dark:placeholder:text-white/20 focus:outline-none"
             />
           </div>
 
@@ -262,12 +262,12 @@ export default function Signup({ onLogin }) {
               className={`absolute left-9 transition-all duration-200 pointer-events-none uppercase tracking-wider font-bold ${
                 emailFocused || email 
                   ? 'top-[-5px] text-[11px] text-[#6366F1]' 
-                  : 'top-[15px] text-[13px] text-white/50'
+                  : 'top-[15px] text-[13px] text-slate-400 dark:text-white/50'
               }`}
             >
               Email Address
             </label>
-            <span className="absolute top-[17px] left-3 text-white/40">
+            <span className="absolute top-[17px] left-3 text-slate-400 dark:text-white/40">
               <Mail className="h-4 w-4" />
             </span>
             <input
@@ -277,7 +277,7 @@ export default function Signup({ onLogin }) {
               onBlur={() => setEmailFocused(false)}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={(emailFocused || email) ? "alex@creator.io" : ""}
-              className="w-full pl-9 pr-4 py-2.5 glass-input text-sm text-white/90 placeholder:text-white/25 focus:outline-none"
+              className="w-full pl-9 pr-4 py-2.5 glass-input text-sm text-slate-800 dark:text-white/90 placeholder:text-slate-400 dark:placeholder:text-white/20 focus:outline-none"
             />
           </div>
 
@@ -289,12 +289,12 @@ export default function Signup({ onLogin }) {
                 className={`absolute left-9 transition-all duration-200 pointer-events-none uppercase tracking-wider font-bold ${
                   passwordFocused || password 
                     ? 'top-[-8px] text-[11px] text-[#6366F1]' 
-                    : 'top-[13px] text-[13px] text-white/50'
+                    : 'top-[13px] text-[13px] text-slate-400 dark:text-white/50'
                 }`}
               >
                 Password
               </label>
-              <span className="absolute top-[17px] left-3 text-white/40">
+              <span className="absolute top-[17px] left-3 text-slate-400 dark:text-white/40">
                 <Lock className="h-4 w-4" />
               </span>
               <input
@@ -304,7 +304,7 @@ export default function Signup({ onLogin }) {
                 onBlur={() => setPasswordFocused(false)}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={(passwordFocused || password) ? "••••••••" : ""}
-                className="w-full pl-9 pr-4 py-2.5 glass-input text-sm text-white/90 placeholder:text-white/25 focus:outline-none"
+                className="w-full pl-9 pr-4 py-2.5 glass-input text-sm text-slate-800 dark:text-white/90 placeholder:text-slate-400 dark:placeholder:text-white/20 focus:outline-none"
               />
             </div>
 
@@ -314,12 +314,12 @@ export default function Signup({ onLogin }) {
                 className={`absolute left-9 transition-all duration-200 pointer-events-none uppercase tracking-wider font-bold ${
                   confirmPasswordFocused || confirmPassword 
                     ? 'top-[-8px] text-[11px] text-[#6366F1]' 
-                    : 'top-[13px] text-[13px] text-white/50'
+                    : 'top-[13px] text-[13px] text-slate-400 dark:text-white/50'
                 }`}
               >
                 Confirm
               </label>
-              <span className="absolute top-[17px] left-3 text-white/40">
+              <span className="absolute top-[17px] left-3 text-slate-400 dark:text-white/40">
                 <Lock className="h-4 w-4" />
               </span>
               <input
@@ -329,7 +329,7 @@ export default function Signup({ onLogin }) {
                 onBlur={() => setConfirmPasswordFocused(false)}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder={(confirmPasswordFocused || confirmPassword) ? "••••••••" : ""}
-                className="w-full pl-9 pr-4 py-2.5 glass-input text-sm text-white/90 placeholder:text-white/25 focus:outline-none"
+                className="w-full pl-9 pr-4 py-2.5 glass-input text-sm text-slate-800 dark:text-white/90 placeholder:text-slate-400 dark:placeholder:text-white/20 focus:outline-none"
               />
             </div>
           </div>
@@ -346,16 +346,16 @@ export default function Signup({ onLogin }) {
 
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-white/5" />
+            <div className="w-full border-t border-slate-200 dark:border-white/5" />
           </div>
-          <div className="relative flex justify-center text-sm uppercase font-bold text-white/30">
-            <span className="bg-[#0D0D1A] px-3">Or sign up with</span>
+          <div className="relative flex justify-center text-xs uppercase font-bold text-slate-400 dark:text-white/30">
+            <span className="bg-white dark:bg-slate-900 px-3">Or sign up with</span>
           </div>
         </div>
 
         {/* Simulation Mode Developer Notice */}
         {!import.meta.env.VITE_GOOGLE_CLIENT_ID && (
-          <div className="text-[11px] text-center text-[#A5B4FC] mb-3 bg-indigo-500/5 py-2 px-3 rounded-xl border border-indigo-500/10 font-medium">
+          <div className="text-[11px] text-center text-indigo-700 dark:text-[#A5B4FC] mb-3 bg-indigo-500/5 py-2 px-3 rounded-xl border border-indigo-500/10 font-bold">
             💡 Google Client ID not configured. Running in Simulation/Demo Mode.
           </div>
         )}
@@ -368,7 +368,7 @@ export default function Signup({ onLogin }) {
           className="w-full flex items-center justify-center gap-2.5 rounded-xl btn-glass px-4 py-2.5 text-sm font-semibold hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer shadow-sm disabled:opacity-50 disabled:pointer-events-none"
         >
           {isGoogleLoading ? (
-            <RefreshCw className="h-4.5 w-4.5 shrink-0 animate-spin text-[#A5B4FC]" />
+            <RefreshCw className="h-4.5 w-4.5 shrink-0 animate-spin text-indigo-650 dark:text-[#A5B4FC]" />
           ) : (
             <svg className="h-4.5 w-4.5 shrink-0" viewBox="0 0 24 24">
               <path
@@ -392,7 +392,7 @@ export default function Signup({ onLogin }) {
           <span>{isGoogleLoading ? 'Connecting to Google...' : 'Continue with Google'}</span>
         </button>
 
-        <div className="text-center text-sm font-bold text-white/40 mt-8">
+        <div className="text-center text-sm font-bold text-slate-500 dark:text-white/40 mt-8">
           Already have an account?{' '}
           <Link to="/login" className="text-[#6366F1] hover:text-[#8B5CF6] transition-colors">
             Login

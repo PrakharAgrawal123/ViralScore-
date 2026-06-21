@@ -7,7 +7,7 @@ import RewriteCard from '../components/RewriteCard';
 import SkeletonLoader from '../components/SkeletonLoader';
 import FloatingOrbs from '../components/FloatingOrbs';
 
-export default function Analyser({ analyser, user }) {
+export default function Analyser({ analyser, user, theme }) {
   const {
     currentAnalysis,
     isLoading,
@@ -79,10 +79,10 @@ export default function Analyser({ analyser, user }) {
         {/* Title */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
               Draft Analyser
             </h1>
-            <p className="text-white/50 text-base mt-1">
+            <p className="text-slate-500 dark:text-white/50 text-base mt-1">
               Write or paste your LinkedIn post draft to predict engagement metrics and correct style errors.
             </p>
           </div>
@@ -108,14 +108,14 @@ export default function Analyser({ analyser, user }) {
           <div className="lg:col-span-6 space-y-6">
             <div className="glass-card space-y-4">
               
-              <div className="flex justify-between items-center pb-2 border-b border-white/5">
+              <div className="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-white/5">
                 <div className="flex items-center space-x-2">
                   <FileText className="h-4 w-4 text-[#6366F1]" />
-                  <span className="text-base font-bold uppercase tracking-wider text-white/70">
+                  <span className="text-sm font-bold uppercase tracking-wider text-slate-600 dark:text-slate-350">
                     Compose Draft
                   </span>
                 </div>
-                <span className="text-[15px] font-bold text-white/30">
+                <span className="text-xs font-bold text-slate-400 dark:text-white/30">
                   Max 3,000 characters
                 </span>
               </div>
@@ -126,7 +126,7 @@ export default function Analyser({ analyser, user }) {
                     value={inputText}
                     onChange={handleInputChange}
                     placeholder="Paste your LinkedIn draft here (e.g. 'We are thrilled to announce a paradigm shift in our synergy model. Let's do a deep dive and leverage our disruptive AI...')"
-                    className="w-full min-h-[280px] glass-input p-4 text-sm leading-relaxed text-white/90 placeholder:text-white/25 resize-y focus:outline-none"
+                    className="w-full min-h-[280px] glass-input p-4 text-sm leading-relaxed text-slate-800 dark:text-white/90 placeholder:text-slate-400 dark:placeholder:text-white/20 resize-y focus:outline-none"
                     maxLength={3000}
                   />
                   {/* Dynamic bottom border gradient progress bar */}
@@ -146,7 +146,7 @@ export default function Analyser({ analyser, user }) {
                 </div>
 
                 {/* Real-time counters below textarea */}
-                <div className="flex flex-wrap items-center justify-between gap-4 text-sm font-semibold text-white/55">
+                <div className="flex flex-wrap items-center justify-between gap-4 text-xs font-bold text-slate-500 dark:text-white/55">
                   <div className="flex items-center space-x-4">
                     <span className="flex items-center">
                       <BarChart className="mr-1 h-3.5 w-3.5" />
@@ -158,7 +158,7 @@ export default function Analyser({ analyser, user }) {
                     </span>
                   </div>
                   
-                  <span className={charCount > 2800 ? 'text-red-500' : 'text-white/30'}>
+                  <span className={charCount > 2800 ? 'text-red-500' : 'text-slate-400 dark:text-white/30'}>
                     {charCount.toLocaleString()} / 3,000 chars
                   </span>
                 </div>
@@ -167,7 +167,7 @@ export default function Analyser({ analyser, user }) {
                 <button
                   type="submit"
                   disabled={isLoading || !inputText.trim()}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl btn-glow py-3.5 font-bold disabled:opacity-50 disabled:scale-100 disabled:shadow-none transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 rounded-xl btn-glow py-3.5 font-bold disabled:opacity-50 disabled:scale-100 disabled:shadow-none transition-all cursor-pointer text-base"
                 >
                   {isLoading ? (
                     <>
@@ -199,7 +199,7 @@ export default function Analyser({ analyser, user }) {
                   exit={{ opacity: 0 }}
                   className="glass-card"
                 >
-                  <h3 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-6">Running AI Models</h3>
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-white/40 mb-6">Running AI Models</h3>
                   <SkeletonLoader />
                 </motion.div>
               )}
@@ -216,23 +216,23 @@ export default function Analyser({ analyser, user }) {
                   {/* Score */}
                   <div className="text-center">
                     <h3 className="text-sm font-bold uppercase tracking-widest gradient-text mb-4">Your Results</h3>
-                    <ScoreRing score={currentAnalysis.score} />
+                    <ScoreRing score={currentAnalysis.score} theme={theme} />
                     
                     <div className="mt-4">
-                      <p className="text-xs text-white/40 font-bold uppercase tracking-wider">Estimated Organic Reach</p>
-                      <p className="text-lg font-extrabold text-[#A5B4FC] mt-0.5">
+                      <p className="text-xs text-slate-500 dark:text-white/40 font-bold uppercase tracking-wider">Estimated Organic Reach</p>
+                      <p className="text-lg font-extrabold text-indigo-600 dark:text-[#A5B4FC] mt-0.5">
                         {currentAnalysis.estimatedReach}
                       </p>
                     </div>
                   </div>
 
-                  <hr className="border-white/5" />
+                  <hr className="border-slate-200 dark:border-white/5" />
 
                   {/* Sentences pill highlights */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-widest text-white/40">Sentence Analysis</h4>
-                      <span className="text-[15px] text-white/30 font-bold">Hover labels to learn more</span>
+                      <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-white/40">Sentence Analysis</h4>
+                      <span className="text-[11px] text-slate-400 dark:text-white/30 font-bold">Hover labels to learn more</span>
                     </div>
                     
                     <div className="flex flex-col gap-2.5 max-h-[300px] overflow-y-auto pr-1">
@@ -245,13 +245,13 @@ export default function Analyser({ analyser, user }) {
                   {/* Posting Schedule */}
                   {currentAnalysis.bestTime && (
                     <>
-                      <hr className="border-white/5" />
+                      <hr className="border-slate-200 dark:border-white/5" />
                       <div className="rounded-xl bg-[#6366F1]/10 p-4 border border-[#6366F1]/20">
-                        <div className="flex items-center space-x-2 text-[#A5B4FC] font-bold text-sm uppercase tracking-wider mb-1.5">
-                          <Calendar className="h-4 w-4" />
+                        <div className="flex items-center space-x-2 text-[#6366F1] dark:text-[#A5B4FC] font-bold text-xs uppercase tracking-wider mb-1.5">
+                          <Calendar className="h-4 w-4 shrink-0" />
                           <span>Best Time to Post</span>
                         </div>
-                        <p className="text-[15px] leading-relaxed text-white/70 font-medium">
+                        <p className="text-sm leading-relaxed text-slate-700 dark:text-white/70 font-semibold">
                           {currentAnalysis.bestTime}
                         </p>
                       </div>
@@ -261,17 +261,17 @@ export default function Analyser({ analyser, user }) {
                   {/* AI suggested rewrites */}
                   {currentAnalysis.rewrites && currentAnalysis.rewrites.length > 0 && (
                     <>
-                      <hr className="border-white/5" />
+                      <hr className="border-slate-200 dark:border-white/5" />
                       <div className="space-y-3">
-                        <h4 className="text-xs font-bold uppercase tracking-widest text-white/40">
+                        <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-white/40">
                           AI Rewrite Suggestions ({currentAnalysis.rewrites.length})
                         </h4>
                         <div className="flex flex-col gap-3 max-h-[360px] overflow-y-auto pr-1">
                           {currentAnalysis.rewrites.map((rw) => (
                             <RewriteCard
-                              key={rw.id}
-                              rewrite={rw}
-                              onApply={() => handleApplyRewrite(rw.original, rw.suggested)}
+                                key={rw.id}
+                                rewrite={rw}
+                                onApply={() => handleApplyRewrite(rw.original, rw.suggested)}
                             />
                           ))}
                         </div>
@@ -288,17 +288,17 @@ export default function Analyser({ analyser, user }) {
                   key="empty"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="rounded-2xl border border-white/10 border-dashed bg-white/5 p-10 text-center"
+                  className="rounded-2xl border border-slate-200 dark:border-white/10 border-dashed bg-slate-100/30 dark:bg-white/5 p-10 text-center"
                 >
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6366F1]/10 text-[#A5B4FC] mb-6 animate-float-fast">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6366F1]/10 text-indigo-600 dark:text-[#A5B4FC] mb-6 animate-float-fast">
                     <Sparkles className="h-6 w-6" />
                   </div>
-                  <h3 className="text-base font-bold text-white mb-2">No Analysis Done</h3>
-                  <p className="text-sm leading-relaxed text-white/40 max-w-[240px] mx-auto mb-6">
+                  <h3 className="text-base font-bold text-slate-800 dark:text-white mb-2">No Analysis Done</h3>
+                  <p className="text-xs leading-relaxed text-slate-500 dark:text-white/40 max-w-[240px] mx-auto mb-6 font-semibold">
                     Write or paste your LinkedIn post draft on the left and tap the button to check it with AI.
                   </p>
                   <div className="flex justify-center">
-                    <span className="inline-flex items-center text-[13px] font-bold uppercase tracking-wider text-[#A5B4FC] bg-[#6366F1]/10 px-3 py-1.5 rounded-lg border border-[#6366F1]/20">
+                    <span className="inline-flex items-center text-[11px] font-bold uppercase tracking-wider text-indigo-600 dark:text-[#A5B4FC] bg-[#6366F1]/10 px-3 py-1.5 rounded-lg border border-[#6366F1]/20">
                       Awaiting Draft
                     </span>
                   </div>

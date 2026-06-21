@@ -1,9 +1,28 @@
 @import "tailwindcss";
 
 :root {
+  /* Light mode colors */
+  --bg-primary: #F8FAFC; /* Slate 50 */
+  --bg-secondary: #F1F5F9; /* Slate 100 */
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-border: rgba(99, 102, 241, 0.12);
+  --glass-border-hover: rgba(99, 102, 241, 0.4);
+  --glow-primary: rgba(99, 102, 241, 0.12);
+  --glow-success: rgba(16, 185, 129, 0.12);
+  --glow-danger: rgba(239, 68, 68, 0.12);
+  --accent: #6366F1;
+  --accent-2: #8B5CF6;
+  --accent-3: #EC4899;
+  --text-primary: #0F172A; /* Slate 900 */
+  --text-secondary: #334155; /* Slate 700 */
+  --text-muted: #64748B; /* Slate 500 */
+}
+
+.dark {
+  /* Dark mode colors */
   --bg-primary: #07070F;
   --bg-secondary: #0D0D1A;
-  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-border-hover: rgba(99, 102, 241, 0.5);
   --glow-primary: rgba(99, 102, 241, 0.35);
@@ -12,57 +31,61 @@
   --accent: #6366F1;
   --accent-2: #8B5CF6;
   --accent-3: #EC4899;
+  --text-primary: #F8FAFC; /* Slate 50 */
+  --text-secondary: #E2E8F0; /* Slate 200 */
+  --text-muted: #94A3B8; /* Slate 400 */
 }
 
 /* Base Body styling */
 body {
-  @apply antialiased text-slate-100 font-sans transition-colors duration-300;
+  @apply antialiased font-sans transition-colors duration-300;
   background-color: var(--bg-primary);
+  color: var(--text-primary);
   background-image:
-    linear-gradient(rgba(99,102,241,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(99,102,241,0.025) 1px, transparent 1px);
+    linear-gradient(rgba(99,102,241,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,0.02) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
 /* Custom Glassmorphism styles */
 .glass {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--glass-bg);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--glass-bg);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 24px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.12),
-              0 8px 32px rgba(0, 0, 0, 0.3);
+  border-color: var(--glass-border-hover);
+  box-shadow: 0 10px 30px var(--glow-primary);
 }
 
 .glass-input {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--glass-bg);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
-  color: #fff;
+  color: var(--text-primary);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .glass-input:focus {
   border-color: rgba(99, 102, 241, 0.7);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15),
-              0 0 20px rgba(99, 102, 241, 0.1);
+              0 0 20px rgba(99, 102, 241, 0.15);
   outline: none;
 }
+
 
 /* Gradient text */
 .gradient-text {
@@ -117,17 +140,17 @@ body {
 
 /* Glass secondary buttons */
 .btn-glass {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
-  color: rgba(255,255,255,0.85);
+  color: var(--text-secondary);
   transition: all 0.3s ease;
 }
 
 .btn-glass:hover {
-  background: rgba(99,102,241,0.12);
-  border-color: rgba(99,102,241,0.5);
-  box-shadow: 0 0 20px rgba(99,102,241,0.15);
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: var(--accent);
 }
 
 /* Logo Pulse Animation */

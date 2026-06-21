@@ -5,7 +5,7 @@ import { FileText, TrendingUp, Sparkles, Award, ArrowUpRight } from 'lucide-reac
 import MetricCard from '../components/MetricCard';
 import FloatingOrbs from '../components/FloatingOrbs';
 
-export default function Dashboard({ analyser }) {
+export default function Dashboard({ analyser, theme }) {
   const {
     posts,
     stats,
@@ -35,11 +35,11 @@ export default function Dashboard({ analyser }) {
   const getBadgeStyle = (status) => {
     switch (status) {
       case 'Viral':
-        return 'bg-emerald-500/10 text-[#6EE7B7] border-emerald-500/20';
+        return 'bg-emerald-500/10 text-emerald-600 dark:text-[#6EE7B7] border-emerald-500/20';
       case 'Needs Work':
-        return 'bg-red-500/10 text-[#FCA5A5] border-red-500/20';
+        return 'bg-red-500/10 text-red-650 dark:text-[#FCA5A5] border-red-500/20';
       default:
-        return 'bg-amber-500/10 text-[#FCD34D] border-amber-500/20';
+        return 'bg-amber-500/10 text-amber-650 dark:text-[#FCD34D] border-amber-500/20';
     }
   };
 
@@ -60,6 +60,15 @@ export default function Dashboard({ analyser }) {
     }
   };
 
+  // Recharts dynamic theme variables
+  const isDark = theme === 'dark';
+  const gridColor = isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(15, 23, 42, 0.06)';
+  const axisColor = isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(15, 23, 42, 0.15)';
+  const labelColor = isDark ? 'rgba(255, 255, 255, 0.4)' : 'rgba(71, 85, 105, 0.7)';
+  const tooltipBg = isDark ? 'rgba(13, 13, 26, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+  const tooltipBorder = isDark ? 'rgba(99, 102, 241, 0.3)' : 'rgba(99, 102, 241, 0.2)';
+  const tooltipTextColor = isDark ? '#fff' : '#0f172a';
+
   return (
     <motion.div
       variants={pageVariants}
@@ -74,10 +83,10 @@ export default function Dashboard({ analyser }) {
       <div style={{ position: "relative", zIndex: 1 }} className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Title */}
         <div className="mb-8">
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
             <span className="gradient-text">Creator Dashboard</span>
           </h1>
-          <p className="text-white/50 text-base mt-1">
+          <p className="text-slate-500 dark:text-white/50 text-base mt-1">
             Monitor your cumulative analytics, historic score updates, and frequently flagged jargon words.
           </p>
         </div>
@@ -128,8 +137,8 @@ export default function Dashboard({ analyser }) {
           >
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-sm font-bold uppercase tracking-widest text-white/40">Score Over Time</h3>
-                <h4 className="text-lg font-bold text-white mt-0.5">Draft Quality Trend</h4>
+                <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 dark:text-white/40">Score Over Time</h3>
+                <h4 className="text-lg font-bold text-slate-800 dark:text-white mt-0.5 font-sans">Draft Quality Trend</h4>
               </div>
             </div>
             
@@ -143,33 +152,33 @@ export default function Dashboard({ analyser }) {
                         <stop offset="100%" stopColor="#8B5CF6" />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.04)" />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
                     <XAxis 
                       dataKey="date" 
-                      stroke="rgba(255,255,255,0.2)" 
+                      stroke={axisColor} 
                       fontSize={11} 
                       fontWeight={600} 
-                      tick={{ fill: "rgba(255,255,255,0.4)" }}
+                      tick={{ fill: labelColor }}
                       tickLine={false} 
                       axisLine={false} 
                     />
                     <YAxis 
                       domain={[0, 100]} 
-                      stroke="rgba(255,255,255,0.2)" 
+                      stroke={axisColor} 
                       fontSize={11} 
                       fontWeight={600} 
-                      tick={{ fill: "rgba(255,255,255,0.4)" }}
+                      tick={{ fill: labelColor }}
                       tickLine={false} 
                       axisLine={false} 
                     />
                     <Tooltip 
                       contentStyle={{
-                        background: "rgba(13,13,26,0.9)",
+                        background: tooltipBg,
                         backdropFilter: "blur(20px)",
-                        border: "1px solid rgba(99,102,241,0.3)",
+                        border: `1px solid ${tooltipBorder}`,
                         borderRadius: "12px",
-                        boxShadow: "0 0 20px rgba(99,102,241,0.2)",
-                        color: "#fff"
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                        color: tooltipTextColor
                       }}
                     />
                     <Line
@@ -183,7 +192,7 @@ export default function Dashboard({ analyser }) {
                   </LineChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="h-full flex items-center justify-center text-white/40 text-xs">
+                <div className="h-full flex items-center justify-center text-slate-400 dark:text-white/40 text-xs font-semibold">
                   No scores available. Analyse a post to generate graphs.
                 </div>
               )}
@@ -199,8 +208,8 @@ export default function Dashboard({ analyser }) {
           >
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-sm font-bold uppercase tracking-widest text-white/40">Jargon Analytics</h3>
-                <h4 className="text-lg font-bold text-white mt-0.5">Most Flagged Weak Words</h4>
+                <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 dark:text-white/40">Jargon Analytics</h3>
+                <h4 className="text-lg font-bold text-slate-800 dark:text-white mt-0.5">Most Flagged Weak Words</h4>
               </div>
             </div>
             
@@ -214,34 +223,34 @@ export default function Dashboard({ analyser }) {
                         <stop offset="100%" stopColor="#8B5CF6" />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(255,255,255,0.04)" />
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={gridColor} />
                     <XAxis 
                       type="number" 
-                      stroke="rgba(255,255,255,0.2)" 
+                      stroke={axisColor} 
                       fontSize={11} 
                       fontWeight={600} 
-                      tick={{ fill: "rgba(255,255,255,0.4)" }}
+                      tick={{ fill: labelColor }}
                       tickLine={false} 
                       axisLine={false} 
                     />
                     <YAxis 
                       type="category" 
                       dataKey="name" 
-                      stroke="rgba(255,255,255,0.2)" 
+                      stroke={axisColor} 
                       fontSize={11} 
                       fontWeight={600} 
-                      tick={{ fill: "rgba(255,255,255,0.4)" }}
+                      tick={{ fill: labelColor }}
                       tickLine={false} 
                       axisLine={false} 
                     />
                     <Tooltip
                       contentStyle={{
-                        background: "rgba(13,13,26,0.9)",
+                        background: tooltipBg,
                         backdropFilter: "blur(20px)",
-                        border: "1px solid rgba(99,102,241,0.3)",
+                        border: `1px solid ${tooltipBorder}`,
                         borderRadius: "12px",
-                        boxShadow: "0 0 20px rgba(99,102,241,0.2)",
-                        color: "#fff"
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                        color: tooltipTextColor
                       }}
                     />
                     <Bar dataKey="value" radius={[0, 8, 8, 0]} barSize={16} fill="url(#barGradient)">
@@ -252,7 +261,7 @@ export default function Dashboard({ analyser }) {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="h-full flex items-center justify-center text-white/40 text-xs">
+                <div className="h-full flex items-center justify-center text-slate-400 dark:text-white/40 text-xs font-semibold">
                   No jargon occurrences found. Nice writing!
                 </div>
               )}
@@ -268,16 +277,16 @@ export default function Dashboard({ analyser }) {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="glass-card overflow-hidden !p-0"
         >
-          <div className="p-6 border-b border-white/5">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-white/40">Activity Logs</h3>
-            <h4 className="text-lg font-bold text-white mt-0.5">Recently Checked Posts</h4>
+          <div className="p-6 border-b border-slate-200 dark:border-white/5">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 dark:text-white/40">Activity Logs</h3>
+            <h4 className="text-lg font-bold text-slate-800 dark:text-white mt-0.5">Recently Checked Posts</h4>
           </div>
           
           <div className="overflow-x-auto">
             {posts.length > 0 ? (
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-white/5 text-xs font-bold uppercase tracking-wider text-white/50 border-b border-white/5">
+                  <tr className="bg-slate-100/60 dark:bg-white/5 text-xs font-bold uppercase tracking-wider text-slate-550 dark:text-white/50 border-b border-slate-200 dark:border-white/5">
                     <th className="p-4 pl-6">Post Preview</th>
                     <th className="p-4">Virality Score</th>
                     <th className="p-4">Date Checked</th>
@@ -285,21 +294,21 @@ export default function Dashboard({ analyser }) {
                     <th className="p-4 text-right pr-6">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-sm font-medium">
+                <tbody className="divide-y divide-slate-200 dark:divide-white/5 text-sm font-medium">
                   {posts.slice(0, 5).map((post) => (
                     <tr
                       key={post.id}
                       onClick={() => handleRowClick(post)}
-                      className="hover:bg-white/5 cursor-pointer transition-colors group"
+                      className="hover:bg-slate-100/50 dark:hover:bg-white/5 cursor-pointer transition-colors group"
                     >
-                      <td className="p-4 pl-6 text-white/80 max-w-sm truncate pr-8">
+                      <td className="p-4 pl-6 text-slate-700 dark:text-white/80 max-w-sm truncate pr-8">
                         {truncateText(post.content)}
                       </td>
                       <td className="p-4">
-                        <span className="font-extrabold text-white">{post.score}</span>
-                        <span className="text-[10px] text-white/40 font-bold uppercase ml-0.5">/100</span>
+                        <span className="font-extrabold text-slate-900 dark:text-white">{post.score}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-white/40 font-bold uppercase ml-0.5">/100</span>
                       </td>
-                      <td className="p-4 text-white/50 text-xs">
+                      <td className="p-4 text-slate-500 dark:text-white/50 text-xs">
                         {post.date}
                       </td>
                       <td className="p-4">
@@ -307,7 +316,7 @@ export default function Dashboard({ analyser }) {
                           {post.status}
                         </span>
                       </td>
-                      <td className="p-4 text-right pr-6 text-xs text-[#6366F1] group-hover:translate-x-0.5 transition-transform flex justify-end items-center gap-0.5 pt-5 cursor-pointer">
+                      <td className="p-4 text-right pr-6 text-xs text-[#6366F1] group-hover:translate-x-0.5 transition-transform flex justify-end items-center gap-0.5 pt-5 cursor-pointer font-bold">
                         <span>Analyse</span>
                         <ArrowUpRight className="h-3.5 w-3.5" />
                       </td>
@@ -316,7 +325,7 @@ export default function Dashboard({ analyser }) {
                 </tbody>
               </table>
             ) : (
-              <div className="p-8 text-center text-white/40 text-xs font-semibold">
+              <div className="p-8 text-center text-slate-400 dark:text-white/40 text-xs font-semibold">
                 No historical data available. Go to the Analyser page to create records!
               </div>
             )}
