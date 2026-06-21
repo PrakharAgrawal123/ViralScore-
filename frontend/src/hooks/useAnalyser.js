@@ -159,7 +159,7 @@ export default function useAnalyser() {
 
     // Determine status badge
     let status = 'Average';
-    let estimatedReach = '1,500 - 4,000 views';
+    let estimatedReach;
     if (score >= 70) {
       status = 'Viral';
       estimatedReach = `${(score * 400).toLocaleString()} - ${(score * 1200).toLocaleString()} views`;
@@ -312,7 +312,7 @@ export default function useAnalyser() {
 
       // Determine updated status
       let status = 'Average';
-      let estimatedReach = post.estimatedReach;
+      let estimatedReach;
       if (newScore >= 70) {
         status = 'Viral';
         estimatedReach = `${(newScore * 400).toLocaleString()} - ${(newScore * 1200).toLocaleString()} views`;

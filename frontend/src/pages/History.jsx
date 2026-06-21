@@ -5,7 +5,7 @@ import { Search, AlertCircle, RefreshCw, BarChart } from 'lucide-react';
 import PostCard from '../components/PostCard';
 import FloatingOrbs from '../components/FloatingOrbs';
 
-export default function History({ analyser, theme }) {
+export default function History({ analyser }) {
   const {
     posts,
     deletePost,

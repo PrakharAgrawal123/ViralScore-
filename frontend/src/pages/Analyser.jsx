@@ -7,7 +7,7 @@ import RewriteCard from '../components/RewriteCard';
 import SkeletonLoader from '../components/SkeletonLoader';
 import FloatingOrbs from '../components/FloatingOrbs';
 
-export default function Analyser({ analyser, user, theme }) {
+export default function Analyser({ analyser, theme }) {
   const {
     currentAnalysis,
     isLoading,
@@ -21,6 +21,7 @@ export default function Analyser({ analyser, user, theme }) {
   // If a post is loaded into currentAnalysis, prefill editor with its content
   useEffect(() => {
     if (currentAnalysis) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setInputText(currentAnalysis.content);
     }
   }, [currentAnalysis]);

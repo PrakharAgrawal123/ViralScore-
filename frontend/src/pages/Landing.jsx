@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Sparkles, TrendingUp, BarChart3, ArrowRight, Star, CheckCircle, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Zap, Sparkles, TrendingUp, BarChart3, ArrowRight, Star, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { MOCK_TESTIMONIALS } from '../data/mockData';
 import FloatingOrbs from '../components/FloatingOrbs';
 import SentenceChip from '../components/SentenceChip';
 
-export default function Landing({ theme }) {
+export default function Landing({ user }) {
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
   // Floating background score preview animations (Desktop only)
