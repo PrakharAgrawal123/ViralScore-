@@ -47,7 +47,7 @@ You spend **30 minutes** writing the perfect LinkedIn post.
 
 You hit publish.
 
-Crickets. 🦗
+Crickets. 
 
 **ViralScore fixes that.**
 
