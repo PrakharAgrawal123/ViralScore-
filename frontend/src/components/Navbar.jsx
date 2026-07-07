@@ -2,16 +2,28 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Menu, X, Sun, Moon, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
-export default function Navbar({ user, onLogout, theme, setTheme }) {
+export default function Navbar({ theme, setTheme }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    return name
+      .split(' ')
+      .map(part => part.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   const handleLogoutClick = () => {
-    onLogout();
+    logout();
     navigate('/');
   };
 
@@ -122,7 +134,7 @@ export default function Navbar({ user, onLogout, theme, setTheme }) {
                   />
                 ) : (
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-[#A5B4FC] font-semibold text-sm border border-indigo-500/20">
-                    {user.initials}
+                    {user.initials || getInitials(user.name)}
                   </div>
                 )}
                 <div className="text-left hidden lg:block">
@@ -215,7 +227,7 @@ export default function Navbar({ user, onLogout, theme, setTheme }) {
                       />
                     ) : (
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-[#A5B4FC] font-semibold border border-indigo-500/20">
-                        {user.initials}
+                        {user.initials || getInitials(user.name)}
                       </div>
                     )}
                     <div>

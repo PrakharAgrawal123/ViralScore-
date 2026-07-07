@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, Mail, Lock, ShieldAlert, RefreshCw } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import FloatingOrbs from '../components/FloatingOrbs';
 
-export default function Login({ onLogin }) {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,6 +17,7 @@ export default function Login({ onLogin }) {
   const [passwordFocused, setPasswordFocused] = useState(false);
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,108 +38,23 @@ export default function Login({ onLogin }) {
       return;
     }
 
-    // Simulate login delay
-    setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsLoading(false);
-
-    // Dynamic initial generation
-    const prefix = email.split('@')[0];
-    const initials = (prefix.slice(0, 2) || 'US').toUpperCase();
-    
-    // Log user in
-    onLogin({
-      name: prefix.charAt(0).toUpperCase() + prefix.slice(1) || 'Alex Creator',
-      email: email,
-      initials: initials
-    });
-
-    navigate('/analyse');
+    try {
+      setIsLoading(true);
+      await login(email, password);
+      navigate('/analyse');
+    } catch (err) {
+      setError(err.response?.data?.error || 'Invalid credentials or connection error.');
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleGoogleLogin = async () => {
-    setError('');
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
-    if (!clientId) {
-      // Simulation / demo mode
-      setIsGoogleLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      setIsGoogleLoading(false);
-      onLogin({
-        name: 'Google Creator',
-        email: 'google@creator.io',
-        initials: 'GC',
-        authType: 'google',
-        isDemo: true
-      });
-      navigate('/analyse');
-      return;
-    }
-
-    try {
-      if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
-        throw new Error('Google Identity Services library not loaded yet. Please try again.');
-      }
-
-      setIsGoogleLoading(true);
-
-      const client = window.google.accounts.oauth2.initTokenClient({
-        client_id: clientId,
-        scope: 'openid email profile',
-        callback: async (tokenResponse) => {
-          if (tokenResponse && tokenResponse.access_token) {
-            try {
-              const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                headers: {
-                  Authorization: `Bearer ${tokenResponse.access_token}`
-                }
-              });
-
-              if (!res.ok) {
-                throw new Error('Failed to retrieve profile details from Google.');
-              }
-
-              const data = await res.json();
-              
-              let initials = 'GC';
-              if (data.name) {
-                const parts = data.name.split(' ');
-                initials = parts.map(p => p.charAt(0)).join('').toUpperCase().slice(0, 2);
-              } else if (data.email) {
-                initials = data.email.slice(0, 2).toUpperCase();
-              }
-
-              onLogin({
-                name: data.name || 'Google User',
-                email: data.email,
-                initials: initials,
-                picture: data.picture,
-                authType: 'google'
-              });
-
-              navigate('/analyse');
-            } catch (err) {
-              setError(err.message || 'An error occurred during Google Sign-In.');
-            } finally {
-              setIsGoogleLoading(false);
-            }
-          } else {
-            setError('Google Sign-In authorization failed.');
-            setIsGoogleLoading(false);
-          }
-        },
-        error_callback: (err) => {
-          setError(err.message || 'Google popup closed or failed.');
-          setIsGoogleLoading(false);
-        }
-      });
-
-      client.requestAccessToken();
-    } catch (err) {
-      setError(err.message || 'Google Sign-In initialization failed.');
-      setIsGoogleLoading(false);
-    }
+  const handleGoogleLogin = () => {
+    setIsGoogleLoading(true);
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    window.location.href = `${API_URL}/auth/google`;
   };
 
   const shakeVariants = {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { INITIAL_POSTS, INITIAL_STATS, MOCK_WEAK_WORDS, MOCK_SCORE_HISTORY } from '../data/mockData';
 
 // Helper to check for common jargon
@@ -71,189 +72,248 @@ export default function useAnalyser() {
   // Perform the core analysis
   const analysePost = async (content) => {
     setIsLoading(true);
-    // Simulate high-end AI processing delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    const sentenceStrings = splitSentences(content);
-    const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
-    const readTimeSeconds = Math.max(Math.ceil((wordCount / 180) * 60), 3); // 180 WPM
-    const readTimeStr = readTimeSeconds < 60 ? `${readTimeSeconds} sec read` : `${Math.ceil(readTimeSeconds/60)} min read`;
-
-    let score = 55; // Base virality starting score
-    const detectedWeakWords = [];
-    const sentences = [];
-    const rewrites = [];
-
-    // Analyze sentence-by-sentence
-    sentenceStrings.forEach((sentence, index) => {
-      let type = 'neutral';
-      let label = 'Neutral';
-
-      // Check jargon
-      let hasJargon = false;
-      let matchedJargon = null;
-
-      JARGON_REPLACEMENTS.forEach(item => {
-        if (sentence.toLowerCase().includes(item.word)) {
-          hasJargon = true;
-          matchedJargon = item;
-          detectedWeakWords.push(item.word);
-        }
-      });
-
-      // Classification priorities
-      if (hasJargon) {
-        type = 'weak';
-        label = 'Weak';
-        score -= 7; // Penalty for jargon
-
-        // Create a suggested rewrite
-        if (matchedJargon) {
-          const regex = new RegExp(matchedJargon.word, 'gi');
-          const suggestedText = sentence.replace(regex, matchedJargon.replacement);
-          rewrites.push({
-            id: `rw-${index}-${Date.now()}`,
-            original: sentence,
-            suggested: suggestedText,
-            explanation: matchedJargon.reason
-          });
-        }
-      } else if (sentence.endsWith('?') || sentence.toLowerCase().includes('let me know') || sentence.toLowerCase().includes('comment')) {
-        type = 'engaging';
-        label = 'Engaging';
-        score += 6; // Bonus for engaging calls-to-action or questions
-      } else if (index === 0 || (index === 1 && sentenceStrings.length > 2 && sentence.length < 90)) {
-        // High hook potential if short and early
-        type = 'hook';
-        label = 'Hook';
-        score += 8;
-      }
-
-      sentences.push({ text: sentence, type, label });
-    });
-
-    // Additional global scoring factors
-    // Multi-line spacing check (creators use single lines for readability)
-    const lineBreaks = (content.match(/\n/g) || []).length;
-    if (lineBreaks > 3) {
-      score += 5; // Clean formatting bonus
-    }
     
-    // Emojis check
-    const emojiRegex = /[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu;
-    const emojiCount = (content.match(emojiRegex) || []).length;
-    if (emojiCount >= 2 && emojiCount <= 8) {
-      score += 6; // Good emoji density bonus
-    } else if (emojiCount > 10) {
-      score -= 3; // Emoji spam penalty
-    }
-
-    // Number statistics check (data helps virality)
-    const hasNumbers = /\b\d+(k|m|%|)?\b/i.test(content);
-    if (hasNumbers) {
-      score += 7; // Statistics bonus
-    }
-
-    // Cap score safely between 22 and 98
-    score = Math.max(22, Math.min(98, score));
-
-    // Determine status badge
-    let status = 'Average';
-    let estimatedReach;
-    if (score >= 70) {
-      status = 'Viral';
-      estimatedReach = `${(score * 400).toLocaleString()} - ${(score * 1200).toLocaleString()} views`;
-    } else if (score < 40) {
-      status = 'Needs Work';
-      estimatedReach = '200 - 800 views';
-    } else {
-      estimatedReach = `${(score * 80).toLocaleString()} - ${(score * 180).toLocaleString()} views`;
-    }
-
-    // Determine optimal post time dynamically
-    const postingWindows = [
-      'Tuesday, 8:45 AM EST (Peak mid-week professional engagement)',
-      'Wednesday, 9:15 AM EST (Optimal lunch break scrolling hour)',
-      'Thursday, 12:30 PM EST (Afternoon professional catch-up window)',
-      'Monday, 10:00 AM EST (Weekly corporate strategy review session)'
-    ];
-    const bestTime = postingWindows[Math.floor(Math.random() * postingWindows.length)];
-
-    const dateToday = new Date().toISOString().split('T')[0];
-    const timeNow = new Date().toTimeString().slice(0, 5);
-
-    const newPost = {
-      id: `post-${Date.now()}`,
-      content,
-      score,
-      originalScore: score, // To trace if improved later
-      date: dateToday,
-      time: timeNow,
-      status,
-      estimatedReach,
-      readTime: readTimeStr,
-      wordCount,
-      sentences,
-      rewrites,
-      bestTime
-    };
-
-    // Update posts state
-    setPosts(prev => [newPost, ...prev]);
-
-    // Recalculate global stats
-    setStats(prev => {
-      const updatedTotal = prev.totalAnalyzed + 1;
-      const allPosts = [newPost, ...posts];
-      const sumScores = allPosts.reduce((acc, curr) => acc + curr.score, 0);
-      const updatedAverage = Math.round(sumScores / updatedTotal);
-      const updatedBest = Math.max(prev.bestScore, score);
+    try {
+      const response = await axios.post('/analysis/predict', { content });
+      const data = response.data;
       
-      return {
-        totalAnalyzed: updatedTotal,
-        averageScore: updatedAverage,
-        bestScore: updatedBest,
-        postsImproved: prev.postsImproved
+      const newPost = {
+        id: `post-${Date.now()}`,
+        content,
+        score: data.score,
+        originalScore: data.score, // To trace if improved later
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toTimeString().slice(0, 5),
+        status: data.status,
+        estimatedReach: data.estimatedReach,
+        readTime: data.readTime,
+        wordCount: data.wordCount,
+        sentences: data.sentences,
+        rewrites: data.rewrites,
+        bestTime: data.bestTime
       };
-    });
 
-    // Update Weak Word frequency list
-    setWeakWords(prev => {
-      const updated = [...prev];
-      detectedWeakWords.forEach(word => {
-        const found = updated.find(w => w.name.toLowerCase() === word.toLowerCase());
-        if (found) {
-          found.value += 1;
+      // Update posts state
+      setPosts(prev => [newPost, ...prev]);
+
+      // Recalculate global stats
+      setStats(prev => {
+        const updatedTotal = prev.totalAnalyzed + 1;
+        const allPosts = [newPost, ...posts];
+        const sumScores = allPosts.reduce((acc, curr) => acc + curr.score, 0);
+        const updatedAverage = Math.round(sumScores / updatedTotal);
+        const updatedBest = Math.max(prev.bestScore, data.score);
+        
+        return {
+          totalAnalyzed: updatedTotal,
+          averageScore: updatedAverage,
+          bestScore: updatedBest,
+          postsImproved: prev.postsImproved
+        };
+      });
+
+      // Update Weak Word frequency list
+      setWeakWords(prev => {
+        const updated = [...prev];
+        const detectedWeakWords = [];
+        data.sentences.forEach(s => {
+          if (s.type === 'weak') {
+            // Find which jargon word matched
+            const matchedJargon = JARGON_REPLACEMENTS.find(item => s.text.toLowerCase().includes(item.word));
+            if (matchedJargon) {
+              detectedWeakWords.push(matchedJargon.word);
+            }
+          }
+        });
+
+        detectedWeakWords.forEach(word => {
+          const found = updated.find(w => w.name.toLowerCase() === word.toLowerCase());
+          if (found) {
+            found.value += 1;
+          } else {
+            updated.push({
+              name: word,
+              value: 1,
+              color: '#B45309'
+            });
+          }
+        });
+        return updated.sort((a, b) => b.value - a.value).slice(0, 7);
+      });
+
+      // Add to chart history array
+      setScoreHistory(prev => {
+        const dateLabel = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+        const existingIndex = prev.findIndex(item => item.date === dateLabel);
+        if (existingIndex !== -1) {
+          const updated = [...prev];
+          updated[existingIndex].score = Math.max(updated[existingIndex].score, data.score);
+          return updated;
         } else {
-          updated.push({
-            name: word,
-            value: 1,
-            color: '#B45309'
-          });
+          const updated = [...prev, { date: dateLabel, score: data.score }];
+          if (updated.length > 10) updated.shift(); // Keep last 10 points
+          return updated;
         }
       });
-      return updated.sort((a, b) => b.value - a.value).slice(0, 7);
-    });
 
-    // Add to chart history array
-    setScoreHistory(prev => {
-      const dateLabel = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
-      // If we already have this date, update the score, otherwise append
-      const existingIndex = prev.findIndex(item => item.date === dateLabel);
-      if (existingIndex !== -1) {
-        const updated = [...prev];
-        updated[existingIndex].score = Math.max(updated[existingIndex].score, score);
-        return updated;
+      setCurrentAnalysis(newPost);
+      setIsLoading(false);
+      return newPost;
+    } catch (err) {
+      console.error('Failed to analyze post on backend, falling back to local calculations.', err);
+      
+      // FALLBACK TO OFFLINE LOGIC IF BACKEND IS UNREACHABLE
+      const sentenceStrings = splitSentences(content);
+      const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
+      const readTimeSeconds = Math.max(Math.ceil((wordCount / 180) * 60), 3);
+      const readTimeStr = readTimeSeconds < 60 ? `${readTimeSeconds} sec read` : `${Math.ceil(readTimeSeconds/60)} min read`;
+
+      let score = 55;
+      const detectedWeakWords = [];
+      const sentences = [];
+      const rewrites = [];
+
+      sentenceStrings.forEach((sentence, index) => {
+        let type = 'neutral';
+        let label = 'Neutral';
+        let hasJargon = false;
+        let matchedJargon = null;
+
+        JARGON_REPLACEMENTS.forEach(item => {
+          if (sentence.toLowerCase().includes(item.word)) {
+            hasJargon = true;
+            matchedJargon = item;
+            detectedWeakWords.push(item.word);
+          }
+        });
+
+        if (hasJargon) {
+          type = 'weak';
+          label = 'Weak';
+          score -= 7;
+
+          if (matchedJargon) {
+            const regex = new RegExp(matchedJargon.word, 'gi');
+            const suggestedText = sentence.replace(regex, matchedJargon.replacement);
+            rewrites.push({
+              id: `rw-${index}-${Date.now()}`,
+              original: sentence,
+              suggested: suggestedText,
+              explanation: matchedJargon.reason
+            });
+          }
+        } else if (sentence.endsWith('?') || sentence.toLowerCase().includes('let me know') || sentence.toLowerCase().includes('comment')) {
+          type = 'engaging';
+          label = 'Engaging';
+          score += 6;
+        } else if (index === 0 || (index === 1 && sentenceStrings.length > 2 && sentence.length < 90)) {
+          type = 'hook';
+          label = 'Hook';
+          score += 8;
+        }
+
+        sentences.push({ text: sentence, type, label });
+      });
+
+      const lineBreaks = (content.match(/\n/g) || []).length;
+      if (lineBreaks > 3) score += 5;
+      
+      const emojiRegex = /[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu;
+      const emojiCount = (content.match(emojiRegex) || []).length;
+      if (emojiCount >= 2 && emojiCount <= 8) score += 6;
+      else if (emojiCount > 10) score -= 3;
+
+      const hasNumbers = /\b\d+(k|m|%|)?\b/i.test(content);
+      if (hasNumbers) score += 7;
+
+      score = Math.max(22, Math.min(98, score));
+
+      let status = 'Average';
+      let estimatedReach;
+      if (score >= 70) {
+        status = 'Viral';
+        estimatedReach = `${(score * 400).toLocaleString()} - ${(score * 1200).toLocaleString()} views`;
+      } else if (score < 40) {
+        status = 'Needs Work';
+        estimatedReach = '200 - 800 views';
       } else {
-        const updated = [...prev, { date: dateLabel, score }];
-        if (updated.length > 10) updated.shift(); // Keep last 10 points
-        return updated;
+        estimatedReach = `${(score * 80).toLocaleString()} - ${(score * 180).toLocaleString()} views`;
       }
-    });
 
-    setCurrentAnalysis(newPost);
-    setIsLoading(false);
-    return newPost;
+      const postingWindows = [
+        'Tuesday, 8:45 AM EST (Peak mid-week professional engagement)',
+        'Wednesday, 9:15 AM EST (Optimal lunch break scrolling hour)',
+        'Thursday, 12:30 PM EST (Afternoon professional catch-up window)',
+        'Monday, 10:00 AM EST (Weekly corporate strategy review session)'
+      ];
+      const bestTime = postingWindows[Math.floor(Math.random() * postingWindows.length)];
+
+      const dateToday = new Date().toISOString().split('T')[0];
+      const timeNow = new Date().toTimeString().slice(0, 5);
+
+      const newPost = {
+        id: `post-${Date.now()}`,
+        content,
+        score,
+        originalScore: score,
+        date: dateToday,
+        time: timeNow,
+        status,
+        estimatedReach,
+        readTime: readTimeStr,
+        wordCount,
+        sentences,
+        rewrites,
+        bestTime
+      };
+
+      setPosts(prev => [newPost, ...prev]);
+
+      setStats(prev => {
+        const updatedTotal = prev.totalAnalyzed + 1;
+        const allPosts = [newPost, ...posts];
+        const sumScores = allPosts.reduce((acc, curr) => acc + curr.score, 0);
+        const updatedAverage = Math.round(sumScores / updatedTotal);
+        const updatedBest = Math.max(prev.bestScore, score);
+        
+        return {
+          totalAnalyzed: updatedTotal,
+          averageScore: updatedAverage,
+          bestScore: updatedBest,
+          postsImproved: prev.postsImproved
+        };
+      });
+
+      setWeakWords(prev => {
+        const updated = [...prev];
+        detectedWeakWords.forEach(word => {
+          const found = updated.find(w => w.name.toLowerCase() === word.toLowerCase());
+          if (found) found.value += 1;
+          else {
+            updated.push({ name: word, value: 1, color: '#B45309' });
+          }
+        });
+        return updated.sort((a, b) => b.value - a.value).slice(0, 7);
+      });
+
+      setScoreHistory(prev => {
+        const dateLabel = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+        const existingIndex = prev.findIndex(item => item.date === dateLabel);
+        if (existingIndex !== -1) {
+          const updated = [...prev];
+          updated[existingIndex].score = Math.max(updated[existingIndex].score, score);
+          return updated;
+        } else {
+          const updated = [...prev, { date: dateLabel, score }];
+          if (updated.length > 10) updated.shift();
+          return updated;
+        }
+      });
+
+      setCurrentAnalysis(newPost);
+      setIsLoading(false);
+      return newPost;
+    }
   };
 
   // Delete a post from history
