@@ -172,15 +172,19 @@ def google_callback():
     }).encode('utf-8')
     
     try:
+        import ssl
+        import certifi
+        ssl_context = ssl.create_default_context(cafile=certifi.where())
+        
         req = urllib.request.Request(token_url, data=data)
-        with urllib.request.urlopen(req) as res:
+        with urllib.request.urlopen(req, context=ssl_context) as res:
             tokens = json.loads(res.read().decode('utf-8'))
             
         access_token = tokens.get('access_token')
         
         # Retrieve profile details from Google API
         userinfo_url = f"https://www.googleapis.com/oauth2/v3/userinfo?access_token={access_token}"
-        with urllib.request.urlopen(userinfo_url) as res:
+        with urllib.request.urlopen(userinfo_url, context=ssl_context) as res:
             google_user = json.loads(res.read().decode('utf-8'))
             
         email = google_user.get('email')
