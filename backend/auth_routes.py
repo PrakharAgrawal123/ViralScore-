@@ -2,6 +2,7 @@ import os
 import json
 import urllib.request
 import urllib.parse
+import urllib.error
 from datetime import datetime
 from flask import Blueprint, request, jsonify, redirect
 from bson.objectid import ObjectId
@@ -217,7 +218,6 @@ def google_callback():
         return redirect(f"{frontend_url}/login?token={token}")
         
     except Exception as e:
-        import urllib.error
         if isinstance(e, urllib.error.HTTPError):
             try:
                 error_body = e.read().decode('utf-8')
