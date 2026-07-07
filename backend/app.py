@@ -1,4 +1,5 @@
 import os
+import certifi
 from flask import Flask, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -16,7 +17,7 @@ app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/vira
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "your_secret_key_here")
 
 # Initialize app extensions
-mongo.init_app(app)
+mongo.init_app(app, tlsCAFile=certifi.where())
 bcrypt.init_app(app)
 jwt.init_app(app)
 
