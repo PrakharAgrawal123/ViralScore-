@@ -11,6 +11,7 @@ from analysis_routes import analysis_bp
 load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv("JWT_SECRET_KEY", "your_secret_key_here")
 
 # Flask Config parameters
 app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/viralscore")

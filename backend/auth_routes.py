@@ -4,7 +4,7 @@ import urllib.request
 import urllib.parse
 import urllib.error
 from datetime import datetime
-from flask import Blueprint, request, jsonify, redirect
+from flask import Blueprint, request, jsonify, redirect, session
 from bson.objectid import ObjectId
 from extensions import mongo, bcrypt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -121,9 +121,19 @@ def google_login():
     client_id = os.getenv("GOOGLE_CLIENT_ID")
     redirect_uri = request.url_root.rstrip('/') + "/auth/google/callback"
     
+    # Store the referrer (frontend origin) in session
+    referer = request.headers.get("Referer")
+    if referer:
+        from urllib.parse import urlparse
+        parsed = urlparse(referer)
+        frontend_url = f"{parsed.scheme}://{parsed.netloc}"
+    else:
+        frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    session["frontend_url"] = frontend_url
+    
     # If no Google credentials configured, execute simulation/dev fallback
     if not client_id:
-        frontend_url = get_frontend_url()
+        frontend_url = session.get("frontend_url") or os.getenv("FRONTEND_URL", "http://localhost:5173")
         demo_user = {
             "name": "Google Creator",
             "email": "google@creator.io",
@@ -214,7 +224,7 @@ def google_callback():
             user_id = str(user["_id"])
             
         token = create_access_token(identity=user_id)
-        frontend_url = get_frontend_url()
+        frontend_url = session.get("frontend_url") or os.getenv("FRONTEND_URL", "http://localhost:5173")
         return redirect(f"{frontend_url}/login?token={token}")
         
     except Exception as e:
