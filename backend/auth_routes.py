@@ -217,4 +217,14 @@ def google_callback():
         return redirect(f"{frontend_url}/login?token={token}")
         
     except Exception as e:
+        import urllib.error
+        if isinstance(e, urllib.error.HTTPError):
+            try:
+                error_body = e.read().decode('utf-8')
+                return jsonify({
+                    "error": f"HTTP {e.code}: {e.reason}",
+                    "details": json.loads(error_body)
+                }), 500
+            except Exception as read_err:
+                return jsonify({"error": str(e), "read_error": str(read_err)}), 500
         return jsonify({"error": str(e)}), 500
