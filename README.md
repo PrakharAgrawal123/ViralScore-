@@ -28,12 +28,12 @@
 <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
 <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
 <img src="https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white" />
-<img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white" />
+<img src="https://img.shields.io/badge/Google%20Gemini%20AI-8E75C2?style=for-the-badge&logo=googlegemini&logoColor=white" />
 <img src="https://img.shields.io/badge/Framer%20Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" />
 
 <br/><br/>
 
-> 🧠 ML Model &nbsp;•&nbsp; 🔐 Google OAuth &nbsp;•&nbsp; 📊 Analytics Dashboard &nbsp;•&nbsp; ✍️ AI Rewrites &nbsp;•&nbsp; 🌑 Dark Glassmorphism UI
+> 🧠 ML Model &nbsp;•&nbsp; 🔐 Google OAuth &nbsp;•&nbsp; 📊 Analytics Dashboard &nbsp;•&nbsp; ✍️ Gemini AI Rewrites &nbsp;•&nbsp; 🌑 Dark Glassmorphism UI
 
 </div>
 
@@ -51,7 +51,7 @@ Crickets.
 
 **ViralScore fixes that.**
 
-Paste your draft → our ML model scores it **out of 100** → AI highlights exactly which sentences are killing your reach → GPT rewrites them → you post at the perfect time.
+Paste your draft → our ML model scores it **out of 100** → AI highlights exactly which sentences are killing your reach → Google Gemini AI rewrites them → you post at the perfect time.
 
 **It's like having a LinkedIn growth hacker in your pocket. For free.**
 
@@ -68,7 +68,7 @@ Paste your draft → our ML model scores it **out of 100** → AI highlights exa
 <td width="50%">
 
 ### 🎯 Virality Score
-ML model trained on **7 engineered features** gives your post a score from **0 to 100** with estimated reach — *Under 300 impressions* all the way to *15,000+ impressions*
+ML model trained on a **LinkedIn Engagement Dataset** gives your post a score from **0 to 100** with estimated reach — *Under 300 impressions* all the way to *15,000+ impressions*
 
 </td>
 <td width="50%">
@@ -82,7 +82,7 @@ Every sentence gets classified into **4 categories** — Hook 🟣, Weak 🔴, E
 <td width="50%">
 
 ### ✍️ AI Rewrite Suggestions
-**GPT-3.5** rewrites your weak, jargon-heavy sentences into punchy, authentic lines that actually get engagement
+**Google Gemini AI** rewrites your weak, jargon-heavy sentences into punchy, authentic lines that actually get engagement
 
 </td>
 <td width="50%">
@@ -127,13 +127,13 @@ Full **JWT authentication** + **Google OAuth 2.0** social login with bcrypt pass
 ┌───────────────────────────▼─────────────────────────────────────┐
 │                      FLASK BACKEND                              │
 │                                                                 │
-│   auth_routes.py   ──  predictor.py  ──  analyzer.py           │
-│   rewriter.py      ──  models.py     ──  JWT + OAuth            │
+│   app.py        ──  auth_routes.py   ──  analysis_routes.py     │
+│   extensions.py ──  train_model.py   ──  JWT + OAuth            │
 └──────────┬────────────────┬────────────────────┬────────────────┘
            │                │                    │
     ┌──────▼──────┐  ┌──────▼──────┐   ┌────────▼────────┐
-    │   SQLite /  │  │  scikit-    │   │   OpenAI GPT    │
-    │  PostgreSQL │  │  learn ML   │   │   3.5 API       │
+    │  MongoDB    │  │  scikit-    │   │  Google Gemini  │
+    │  Atlas      │  │  learn ML   │   │  Generative AI  │
     │  (Users +   │  │  Model      │   │  (Rewrites)     │
     │   History)  │  │  (.pkl)     │   │                 │
     └─────────────┘  └─────────────┘   └─────────────────┘
@@ -163,15 +163,15 @@ Full **JWT authentication** + **Google OAuth 2.0** social login with bcrypt pass
 |------|-----|
 | **Python + Flask** | Lightweight REST API server |
 | **Flask-JWT-Extended** | Secure token-based authentication |
-| **Flask-SQLAlchemy** | ORM — no raw SQL needed |
+| **Flask-PyMongo** | Dynamic MongoDB database integration driver |
 | **bcrypt** | Industry-standard password hashing |
 | **Flask-CORS** | Cross-origin request handling |
 
 ### 🧠 ML / AI
 | Tech | Why |
 |------|-----|
-| **scikit-learn** | GradientBoostingRegressor for virality scoring |
-| **OpenAI GPT-3.5** | Sentence rewriting & NLP analysis |
+| **scikit-learn** | RandomForestRegressor for virality scoring |
+| **Google Gemini API** | Sentence rewriting & NLP analysis via `google-generativeai` |
 | **pandas + numpy** | Feature engineering & data processing |
 | **joblib** | Save & load trained `.pkl` model |
 
@@ -187,19 +187,37 @@ Full **JWT authentication** + **Google OAuth 2.0** social login with bcrypt pass
 
 LinkedIn-Post-Virality-Predictor/
 │
+├── 📂 backend/
+│   ├── 📂 Dataset/
+│   │   └── LinkedIn_Post.csv
+│   ├── 📂 models/
+│   │   ├── virality_model.pkl
+│   │   └── metadata.pkl
+│   ├── .env
+│   ├── analysis_routes.py
+│   ├── app.py
+│   ├── auth_routes.py
+│   ├── extensions.py
+│   ├── requirements.txt
+│   └── train_model.py
+│
 ├── 📂 frontend/
 │   ├── 📂 public/
 │   ├── 📂 src/
 │   │   ├── 📂 assets/
 │   │   ├── 📂 components/
+│   │   ├── 📂 context/
+│   │   │   └── AuthContext.jsx
 │   │   ├── 📂 data/
 │   │   ├── 📂 hooks/
+│   │   │   └── useAnalyser.js
 │   │   ├── 📂 pages/
 │   │   ├── App.jsx
 │   │   ├── App.css
 │   │   ├── index.css
 │   │   └── main.jsx
 │   │
+│   ├── .env
 │   ├── .env.example
 │   ├── .gitignore
 │   ├── eslint.config.js
@@ -208,8 +226,10 @@ LinkedIn-Post-Virality-Predictor/
 │   ├── package-lock.json
 │   ├── postcss.config.js
 │   ├── tailwind.config.js
+│   ├── vercel.json
 │   └── vite.config.js
 │
+├── .gitignore
 └── README.md
 
 ```
@@ -239,16 +259,17 @@ pip install -r requirements.txt
 Create `backend/.env`:
 
 ```env
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/viralscore?retryWrites=true&w=majority
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 JWT_SECRET_KEY=any_random_secret_string
-OPENAI_API_KEY=your_openai_api_key
+GEMINI_API_KEY=your_gemini_api_key
 FRONTEND_URL=http://localhost:5173
 ```
 
 Train the model (only once):
 ```bash
-python model/train_model.py
+python train_model.py
 ```
 
 Start server:
@@ -283,15 +304,16 @@ Done. 🎉
 ## 🗺️ &nbsp;Roadmap
 
 ```
-✅ ML virality scoring model (GradientBoosting)
+✅ ML virality scoring model (RandomForestRegressor)
 ✅ Sentence NLP breakdown (4 categories)
-✅ GPT-3.5 AI rewrite suggestions
+✅ Google Gemini AI rewrite suggestions
 ✅ Dark glassmorphism UI with Framer Motion
 ✅ JWT auth + Google OAuth 2.0
 ✅ Personal analytics dashboard
 ✅ Post history with search & filter
 ✅ Deployed on Vercel (Frontend)
-⬜ Deploy backend on Render
+✅ Deploy backend on Render
+✅ Database migrated to MongoDB Atlas
 ⬜ Real LinkedIn dataset for better accuracy
 ⬜ BERT-based NLP upgrade
 ⬜ Chrome extension for LinkedIn composer
