@@ -10,6 +10,14 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 
 auth_bp = Blueprint('auth', __name__)
 
+def get_frontend_url():
+    referer = request.headers.get("Referer")
+    if referer and "localhost" in referer:
+        from urllib.parse import urlparse
+        parsed = urlparse(referer)
+        return f"{parsed.scheme}://{parsed.netloc}"
+    return os.getenv("FRONTEND_URL", "http://localhost:5173")
+
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json() or {}
@@ -114,7 +122,7 @@ def google_login():
     
     # If no Google credentials configured, execute simulation/dev fallback
     if not client_id:
-        frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+        frontend_url = get_frontend_url()
         demo_user = {
             "name": "Google Creator",
             "email": "google@creator.io",
@@ -201,7 +209,7 @@ def google_callback():
             user_id = str(user["_id"])
             
         token = create_access_token(identity=user_id)
-        frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+        frontend_url = get_frontend_url()
         return redirect(f"{frontend_url}/login?token={token}")
         
     except Exception as e:
