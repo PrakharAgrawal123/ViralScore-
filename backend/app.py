@@ -11,11 +11,11 @@ from analysis_routes import analysis_bp
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv("JWT_SECRET_KEY", "your_secret_key_here")
+app.secret_key = os.getenv("JWT_SECRET_KEY", "df876b5cf69a47b6a123f4b50c7a5223e7f92026a0a91a92e104")
 
 # Flask Config parameters
 app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/viralscore")
-app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "your_secret_key_here")
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "df876b5cf69a47b6a123f4b50c7a5223e7f92026a0a91a92e104")
 
 # Initialize app extensions
 mongo.init_app(app, tlsCAFile=certifi.where())
