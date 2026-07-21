@@ -48,8 +48,7 @@ export default function Login() {
 
     try {
       setIsForgotLoading(true);
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      const res = await axios.post(`${API_URL}/auth/forgot-password`, { email: forgotEmail });
+      const res = await axios.post('/auth/forgot-password', { email: forgotEmail });
       setForgotSuccess(res.data.message || 'Verification code sent to your email.');
       setForgotStep(2);
     } catch (err) {
@@ -81,8 +80,7 @@ export default function Login() {
 
     try {
       setIsForgotLoading(true);
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      const res = await axios.post(`${API_URL}/auth/reset-password`, {
+      const res = await axios.post('/auth/reset-password', {
         email: forgotEmail,
         code: forgotCode,
         new_password: forgotNewPassword
