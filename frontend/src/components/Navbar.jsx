@@ -117,10 +117,11 @@ export default function Navbar({ theme, setTheme }) {
             {/* Dark Mode Toggle */}
             <button
               onClick={toggleTheme}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-600 hover:bg-slate-200 dark:border-white/10 dark:bg-white/5 dark:text-slate-350 dark:hover:bg-white/10 transition-colors cursor-pointer"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-indigo-600 shadow-sm hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:text-amber-400 dark:hover:bg-white/10 transition-all cursor-pointer"
               aria-label="Toggle theme"
+              title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
             >
-              {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5 text-amber-400" />}
+              {theme === 'light' ? <Moon className="h-5 w-5 text-indigo-600" /> : <Sun className="h-5 w-5 text-amber-400" />}
             </button>
 
             {user ? (
@@ -171,14 +172,15 @@ export default function Navbar({ theme, setTheme }) {
           <div className="flex items-center space-x-3 md:hidden">
             <button
               onClick={toggleTheme}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-100/50 text-slate-600 hover:bg-slate-200 dark:border-white/10 dark:text-slate-350 dark:hover:bg-white/10 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-indigo-600 shadow-sm hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:text-amber-400 dark:hover:bg-white/10 transition-all cursor-pointer"
+              aria-label="Toggle theme"
             >
-              {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4 text-amber-400" />}
+              {theme === 'light' ? <Moon className="h-4 w-4 text-indigo-600" /> : <Sun className="h-4 w-4 text-amber-400" />}
             </button>
             
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-100/50 text-slate-600 hover:bg-slate-200 dark:border-white/10 dark:text-slate-350 dark:hover:bg-white/10 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 transition-colors"
             >
               {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -212,6 +214,21 @@ export default function Navbar({ theme, setTheme }) {
                   {link.name}
                 </Link>
               ))}
+            </div>
+
+            <div className="pt-2">
+              <button
+                onClick={toggleTheme}
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 font-semibold text-sm shadow-sm cursor-pointer"
+              >
+                <span className="flex items-center gap-2">
+                  {theme === 'light' ? <Moon className="h-4 w-4 text-indigo-600" /> : <Sun className="h-4 w-4 text-amber-400" />}
+                  <span>{theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}</span>
+                </span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-350 font-bold uppercase tracking-wider">
+                  {theme}
+                </span>
+              </button>
             </div>
 
             <div className="pt-4 border-t border-slate-200 dark:border-white/5">
