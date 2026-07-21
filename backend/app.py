@@ -23,8 +23,7 @@ bcrypt.init_app(app)
 jwt.init_app(app)
 
 # CORS configuration
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
-CORS(app, resources={r"/*": {"origins": [frontend_url, "http://localhost:5173", "https://viral-score-eight.vercel.app"]}}, supports_credentials=True)
+CORS(app, supports_credentials=True)
 
 # Register Blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
