@@ -121,51 +121,7 @@ export default function Landing({ user }) {
     }
   ];
 
-  const pricingPlans = [
-    {
-      name: 'Free Creator',
-      price: '$0',
-      period: 'forever',
-      desc: 'Perfect for content hobbyists beginning their branding journey.',
-      features: [
-        '3 virality checks per day',
-        'Basic sentence highlight scans',
-        'Word and reading time count',
-        'Local dashboard logs history'
-      ],
-      cta: 'Get Started',
-      popular: false
-    },
-    {
-      name: 'Pro Solopreneur',
-      price: '$19',
-      period: 'per month',
-      desc: 'For active creators looking to compound their organic impressions.',
-      features: [
-        'Unlimited virality checks',
-        'Unlimited AI rewrite suggestions',
-        'Complete creator analytics trends',
-        'Best time to post calendar',
-        'Priority feature updates'
-      ],
-      cta: 'Start Free Trial',
-      popular: true
-    },
-    {
-      name: 'Agency Pro',
-      price: '$49',
-      period: 'per month',
-      desc: 'Designed for marketing teams and collaborative social managers.',
-      features: [
-        'Collaborative workspace (3 seats)',
-        'Exportable client analytics files',
-        'Custom tone settings presets',
-        'Dedicated account manager support'
-      ],
-      cta: 'Contact Sales',
-      popular: false
-    }
-  ];
+
 
   const FAQS = [
     {
@@ -559,71 +515,137 @@ export default function Landing({ user }) {
           </div>
         </section>
 
-        {/* PRICING PLANS SECTION */}
+        {/* ML ANALYTICS / ENGINE FEATURES SECTION (Replaces Pricing) */}
         <section className="py-16 border-t border-slate-200 dark:border-white/5 bg-transparent">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             
             <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-[#6366F1]">Simple Pricing</h2>
+              <h2 className="text-sm font-bold uppercase tracking-widest text-[#6366F1]">The Science of Reach</h2>
               <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight sm:text-4xl">
-                Calibrated for Every Stage
+                Inside the Predictive Engine
               </h3>
               <p className="text-slate-500 dark:text-white/50 max-w-xl mx-auto text-base font-medium">
-                Choose the plan that fits your growth targets. From casual creators to dedicated content marketing squads.
+                ViralScore uses a custom RandomForest Regressor trained on 50,000+ creator posts to analyze critical readability and structure metrics.
               </p>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto items-stretch">
-              {pricingPlans.map((plan, idx) => (
-                <div
-                  key={idx}
-                  className={`relative flex flex-col justify-between rounded-2xl p-6 glass-card transition-all hover-lift ${
-                    plan.popular
-                      ? 'border-[#6366F1]/50 shadow-[0_0_30px_rgba(99,102,241,0.15)] ring-2 ring-[#6366F1]/30'
-                      : 'border-slate-200 dark:border-white/5'
-                  }`}
-                >
-                  {plan.popular && (
-                    <span className="absolute top-0 right-6 transform -translate-y-1/2 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
-                      Most Popular
-                    </span>
-                  )}
-
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-base font-extrabold text-slate-800 dark:text-white">{plan.name}</h4>
-                      <p className="text-xs text-slate-500 dark:text-white/40 mt-1 leading-normal font-semibold">{plan.desc}</p>
-                    </div>
-
-                    <div className="flex items-baseline space-x-1.5 py-2 border-b border-slate-200 dark:border-white/5">
-                      <span className="text-4xl font-black text-slate-900 dark:text-white">{plan.price}</span>
-                      <span className="text-xs font-bold text-slate-400 dark:text-white/30 uppercase">{plan.period}</span>
-                    </div>
-
-                    <ul className="space-y-2.5 text-xs text-slate-650 dark:text-white/70 font-semibold pt-2">
-                      {plan.features.map((feat, fIdx) => (
-                        <li key={fIdx} className="flex items-center space-x-2">
-                          <CheckCircle className="h-4 w-4 text-emerald-500 shrink-0" />
-                          <span>{feat}</span>
-                        </li>
-                      ))}
-                    </ul>
+            <div className="grid gap-8 md:grid-cols-3 max-w-6xl mx-auto items-stretch">
+              {/* Card 1 */}
+              <div className="relative flex flex-col justify-between rounded-2xl p-6 glass-card border border-slate-200 dark:border-white/5 transition-all hover-lift">
+                <div className="space-y-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/10 text-[#6366F1]">
+                    <Zap className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-extrabold text-slate-800 dark:text-white">Structure & Formatting</h4>
+                    <p className="text-xs text-slate-550 dark:text-white/40 mt-1 leading-normal font-semibold">
+                      Scanning the layout structure and readability of your draft.
+                    </p>
                   </div>
 
-                  <div className="pt-6">
-                    <Link
-                      to={user ? "/analyse" : "/signup"}
-                      className={`block w-full text-center py-2.5 rounded-xl text-xs font-bold transition-all ${
-                        plan.popular
-                          ? 'btn-glow text-white'
-                          : 'btn-glass text-slate-700 dark:text-slate-300'
-                      }`}
-                    >
-                      {plan.cta}
-                    </Link>
-                  </div>
+                  <ul className="space-y-3 text-xs text-slate-650 dark:text-white/70 font-semibold pt-2">
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Hook Strength (Line 1-2):</strong> Crucial to prevent users from scrolling past the fold.</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Line Break Density:</strong> High spacing makes text highly readable on mobile screens.</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Emoji & Hash Optimization:</strong> Balanced usage to maximize engagement ratios.</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Read-Time Index:</strong> Keeping drafts within the optimal attention span windows.</span>
+                    </li>
+                  </ul>
                 </div>
-              ))}
+              </div>
+
+              {/* Card 2 */}
+              <div className="relative flex flex-col justify-between rounded-2xl p-6 glass-card border-[#6366F1]/50 shadow-[0_0_30px_rgba(99,102,241,0.15)] ring-2 ring-[#6366F1]/30 transition-all hover-lift">
+                <span className="absolute top-0 right-6 transform -translate-y-1/2 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
+                  AI-Powered
+                </span>
+
+                <div className="space-y-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/10 text-[#6366F1]">
+                    <Sparkles className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-extrabold text-slate-800 dark:text-white">Gemini NLP Semantics</h4>
+                    <p className="text-xs text-slate-550 dark:text-white/40 mt-1 leading-normal font-semibold">
+                      Classifying sentences and suggesting authentic context improvements.
+                    </p>
+                  </div>
+
+                  <ul className="space-y-3 text-xs text-slate-650 dark:text-white/70 font-semibold pt-2">
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Corporate Jargon Flagger:</strong> Flags buzzwords like 'synergize' and 'disruptive'.</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Sentence Classification:</strong> Color-codes Hook 🟣, Weak 🔴, Engaging 🟢, and Neutral ⚪.</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Active Voice Rewrites:</strong> Generates punchier alternative drafts using Gemini AI.</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Readability Benchmark:</strong> Keeps tone natural, conversational, and direct.</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Card 3 */}
+              <div className="relative flex flex-col justify-between rounded-2xl p-6 glass-card border border-slate-200 dark:border-white/5 transition-all hover-lift">
+                <div className="space-y-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/10 text-[#6366F1]">
+                    <BarChart3 className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-extrabold text-slate-800 dark:text-white">Timing & Creator Trends</h4>
+                    <p className="text-xs text-slate-550 dark:text-white/40 mt-1 leading-normal font-semibold">
+                      Determining optimal scheduling times and tracking progression.
+                    </p>
+                  </div>
+
+                  <ul className="space-y-3 text-xs text-slate-650 dark:text-white/70 font-semibold pt-2">
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Best Time to Post:</strong> Recommends exact day/time based on corporate scrolling calendars.</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Historical Trends Graph:</strong> Tracks your drafts' progress in Recharts analytics.</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Frequent Weak Words:</strong> Highlights overused words to improve your writing vocabulary.</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-[#6366F1] shrink-0 mt-0.5" />
+                      <span><strong>Draft History Archives:</strong> Easily search, filter, and review previous analysis logs.</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom CTA banner */}
+            <div className="mt-12 text-center">
+              <Link
+                to={user ? "/analyse" : "/signup"}
+                className="inline-flex items-center gap-2 rounded-xl btn-glow px-6 py-3.5 text-sm font-extrabold shadow-lg shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+              >
+                <span>Optimize Your First Post</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
 
           </div>
