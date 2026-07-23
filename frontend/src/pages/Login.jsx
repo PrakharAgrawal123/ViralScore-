@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Zap, Lock, RefreshCw } from 'lucide-react';
+import { Zap, Mail, Lock, ShieldAlert, RefreshCw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import FloatingOrbs from '../components/FloatingOrbs';
 import axios from 'axios';
