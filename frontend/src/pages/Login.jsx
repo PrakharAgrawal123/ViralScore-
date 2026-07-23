@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Mail, Lock, ShieldAlert, RefreshCw, X, Key } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Zap, Lock, RefreshCw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import FloatingOrbs from '../components/FloatingOrbs';
 import axios from 'axios';
@@ -17,91 +17,12 @@ export default function Login() {
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
 
-  // Forgot Password flow states
-  const [showForgotModal, setShowForgotModal] = useState(false);
-  const [forgotStep, setForgotStep] = useState(1); // 1 = Enter Email, 2 = Verify Code & Reset
-  const [forgotEmail, setForgotEmail] = useState('');
-  const [forgotCode, setForgotCode] = useState('');
-  const [forgotNewPassword, setForgotNewPassword] = useState('');
-  const [forgotConfirmPassword, setForgotConfirmPassword] = useState('');
-  const [forgotError, setForgotError] = useState('');
-  const [forgotSuccess, setForgotSuccess] = useState('');
-  const [isForgotLoading, setIsForgotLoading] = useState(false);
+
 
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleSendResetCode = async (e) => {
-    e.preventDefault();
-    setForgotError('');
-    setForgotSuccess('');
 
-    if (!forgotEmail.trim()) {
-      setForgotError('Please enter your email address.');
-      return;
-    }
-
-    if (!/\S+@\S+\.\S+/.test(forgotEmail)) {
-      setForgotError('Please enter a valid email format.');
-      return;
-    }
-
-    try {
-      setIsForgotLoading(true);
-      const res = await axios.post('/auth/forgot-password', { email: forgotEmail });
-      setForgotSuccess(res.data.message || 'Verification code sent to your email.');
-      setForgotStep(2);
-    } catch (err) {
-      setForgotError(err.response?.data?.error || 'Failed to send reset code. Please try again.');
-    } finally {
-      setIsForgotLoading(false);
-    }
-  };
-
-  const handleResetPassword = async (e) => {
-    e.preventDefault();
-    setForgotError('');
-    setForgotSuccess('');
-
-    if (!forgotCode.trim() || !forgotNewPassword.trim() || !forgotConfirmPassword.trim()) {
-      setForgotError('All fields are required.');
-      return;
-    }
-
-    if (forgotNewPassword.length < 6) {
-      setForgotError('Password must be at least 6 characters long.');
-      return;
-    }
-
-    if (forgotNewPassword !== forgotConfirmPassword) {
-      setForgotError('Passwords do not match.');
-      return;
-    }
-
-    try {
-      setIsForgotLoading(true);
-      const res = await axios.post('/auth/reset-password', {
-        email: forgotEmail,
-        code: forgotCode,
-        new_password: forgotNewPassword
-      });
-      setForgotSuccess(res.data.message || 'Password reset successfully!');
-      setTimeout(() => {
-        setShowForgotModal(false);
-        setForgotStep(1);
-        setForgotEmail('');
-        setForgotCode('');
-        setForgotNewPassword('');
-        setForgotConfirmPassword('');
-        setForgotSuccess('');
-        setForgotError('');
-      }, 2500);
-    } catch (err) {
-      setForgotError(err.response?.data?.error || 'Failed to reset password. Check code and try again.');
-    } finally {
-      setIsForgotLoading(false);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -260,8 +181,8 @@ export default function Login() {
             />
           </div>
 
-          {/* Remember & Forgot Row */}
-          <div className="flex items-center justify-between text-sm font-bold pt-1">
+          {/* Remember Row */}
+          <div className="flex items-center text-sm font-bold pt-1">
             <label className="flex items-center text-slate-600 dark:text-white/60 cursor-pointer hover:text-slate-900 dark:hover:text-white transition-colors">
               <input 
                 type="checkbox" 
@@ -269,18 +190,6 @@ export default function Login() {
               />
               Remember me
             </label>
-            <button 
-              type="button" 
-              onClick={() => {
-                setShowForgotModal(true);
-                setForgotStep(1);
-                setForgotError('');
-                setForgotSuccess('');
-              }}
-              className="text-[#6366F1] hover:text-[#8B5CF6] transition-colors cursor-pointer bg-transparent border-none outline-none p-0 font-bold"
-            >
-              Forgot password?
-            </button>
           </div>
 
           {/* Submit */}
@@ -349,166 +258,6 @@ export default function Login() {
         </div>
 
       </motion.div>
-
-      {/* Forgot Password Modal Overlay */}
-      <AnimatePresence>
-        {showForgotModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4"
-          >
-            <motion.div
-              initial={{ scale: 0.95, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 20 }}
-              className="relative w-full max-w-md bg-white dark:bg-[#07070F] border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-2xl"
-            >
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={() => setShowForgotModal(false)}
-                className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:text-slate-655 dark:hover:text-white transition-colors hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer"
-              >
-                <X className="h-5 w-5" />
-              </button>
-
-              <div className="mb-6">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-[#6366F1] mb-3">
-                  <Key className="h-5 w-5" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                  Reset your password
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-white/45 mt-1 font-medium">
-                  {forgotStep === 1 
-                    ? "Enter your email address to receive a 6-digit verification code." 
-                    : "Enter the verification code sent to your email along with your new password."}
-                </p>
-              </div>
-
-              {/* Success / Error Alerts */}
-              {forgotError && (
-                <div className="flex items-start space-x-2 rounded-xl bg-red-500/10 text-red-650 dark:text-red-400 p-3 text-xs font-semibold mb-4 border border-red-500/20">
-                  <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />
-                  <span>{forgotError}</span>
-                </div>
-              )}
-              {forgotSuccess && (
-                <div className="rounded-xl bg-emerald-500/10 text-emerald-650 dark:text-emerald-400 p-3 text-xs font-semibold mb-4 border border-emerald-500/20">
-                  {forgotSuccess}
-                </div>
-              )}
-
-              {/* Step 1: Send Code */}
-              {forgotStep === 1 ? (
-                <form onSubmit={handleSendResetCode} className="space-y-4">
-                  <div className="relative">
-                    <label className="text-[11px] font-bold text-slate-500 dark:text-white/40 uppercase tracking-wider block mb-1">
-                      Email Address
-                    </label>
-                    <div className="relative">
-                      <span className="absolute top-[13px] left-3 text-slate-400 dark:text-white/40">
-                        <Mail className="h-4 w-4" />
-                      </span>
-                      <input
-                        type="email"
-                        value={forgotEmail}
-                        onChange={(e) => setForgotEmail(e.target.value)}
-                        placeholder="you@example.com"
-                        required
-                        className="w-full pl-9 pr-4 py-2.5 glass-input text-sm text-slate-800 dark:text-white/90 placeholder:text-slate-400 dark:placeholder:text-white/20 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isForgotLoading}
-                    className="w-full flex items-center justify-center gap-2 rounded-xl btn-glow py-3 font-bold disabled:opacity-50 transition-all cursor-pointer text-sm"
-                  >
-                    {isForgotLoading ? 'Sending Code...' : 'Send Verification Code'}
-                  </button>
-                </form>
-              ) : (
-                /* Step 2: Code & New Password */
-                <form onSubmit={handleResetPassword} className="space-y-4">
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-500 dark:text-white/40 uppercase tracking-wider block mb-1">
-                      Verification Code
-                    </label>
-                    <input
-                      type="text"
-                      maxLength={6}
-                      value={forgotCode}
-                      onChange={(e) => setForgotCode(e.target.value)}
-                      placeholder="Enter 6-digit code"
-                      required
-                      className="w-full px-4 py-2.5 glass-input text-sm text-center font-bold tracking-widest text-slate-800 dark:text-white/90 placeholder:text-slate-400 dark:placeholder:text-white/20 focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-500 dark:text-white/40 uppercase tracking-wider block mb-1">
-                      New Password
-                    </label>
-                    <div className="relative">
-                      <span className="absolute top-[13px] left-3 text-slate-400 dark:text-white/40">
-                        <Lock className="h-4 w-4" />
-                      </span>
-                      <input
-                        type="password"
-                        value={forgotNewPassword}
-                        onChange={(e) => setForgotNewPassword(e.target.value)}
-                        placeholder="••••••••"
-                        required
-                        className="w-full pl-9 pr-4 py-2.5 glass-input text-sm text-slate-800 dark:text-white/90 placeholder:text-slate-400 dark:placeholder:text-white/20 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-500 dark:text-white/40 uppercase tracking-wider block mb-1">
-                      Confirm New Password
-                    </label>
-                    <div className="relative">
-                      <span className="absolute top-[13px] left-3 text-slate-400 dark:text-white/40">
-                        <Lock className="h-4 w-4" />
-                      </span>
-                      <input
-                        type="password"
-                        value={forgotConfirmPassword}
-                        onChange={(e) => setForgotConfirmPassword(e.target.value)}
-                        placeholder="••••••••"
-                        required
-                        className="w-full pl-9 pr-4 py-2.5 glass-input text-sm text-slate-800 dark:text-white/90 placeholder:text-slate-400 dark:placeholder:text-white/20 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setForgotStep(1)}
-                      className="flex-1 rounded-xl border border-slate-200 dark:border-white/10 text-slate-655 dark:text-white/80 py-2.5 font-bold hover:bg-slate-50 dark:hover:bg-white/5 text-sm transition-all cursor-pointer"
-                    >
-                      Back
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isForgotLoading}
-                      className="flex-[2] flex items-center justify-center gap-2 rounded-xl btn-glow py-2.5 font-bold disabled:opacity-50 transition-all cursor-pointer text-sm"
-                    >
-                      {isForgotLoading ? 'Resetting...' : 'Reset Password'}
-                    </button>
-                  </div>
-                </form>
-              )}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 }

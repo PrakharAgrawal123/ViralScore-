@@ -32,7 +32,7 @@ def send_notification_email(to_email, subject, body_text, body_html=None):
     
     if not smtp_server or not smtp_port or not smtp_username or not smtp_password:
         print("\n" + "="*60)
-        print(f"📧 [DEV EMAIL SIMULATION]")
+        print(f"[Email Simulation] (DEV)")
         print(f"TO: {to_email}")
         print(f"SUBJECT: {subject}")
         print(f"BODY:\n{body_text}")
@@ -52,14 +52,15 @@ def send_notification_email(to_email, subject, body_text, body_html=None):
             part2 = MIMEText(body_html, "html")
             msg.attach(part2)
 
-        server = smtplib.SMTP(smtp_server, int(smtp_port))
+        # Added timeout=5 to prevent Gunicorn worker hangs on blocked/slow SMTP connections
+        server = smtplib.SMTP(smtp_server, int(smtp_port), timeout=5)
         server.starttls()
         server.login(smtp_username, smtp_password)
         server.sendmail(smtp_username, to_email, msg.as_string())
         server.quit()
         return True
     except Exception as e:
-        print(f"❌ Failed to send email to {to_email}: {e}")
+        print(f"Error: Failed to send email to {to_email}: {e}")
         return False
 
 @auth_bp.route('/signup', methods=['POST'])
@@ -265,14 +266,16 @@ def google_callback():
         ssl_context = ssl.create_default_context(cafile=certifi.where())
         
         req = urllib.request.Request(token_url, data=data)
-        with urllib.request.urlopen(req, context=ssl_context) as res:
+        # Added timeout=10 to prevent hanging
+        with urllib.request.urlopen(req, context=ssl_context, timeout=10) as res:
             tokens = json.loads(res.read().decode('utf-8'))
             
         access_token = tokens.get('access_token')
         
         # Retrieve profile details from Google API
         userinfo_url = f"https://www.googleapis.com/oauth2/v3/userinfo?access_token={access_token}"
-        with urllib.request.urlopen(userinfo_url, context=ssl_context) as res:
+        # Added timeout=10 to prevent hanging
+        with urllib.request.urlopen(userinfo_url, context=ssl_context, timeout=10) as res:
             google_user = json.loads(res.read().decode('utf-8'))
             
         email = google_user.get('email')
@@ -346,104 +349,4 @@ def google_callback():
                 return jsonify({"error": str(e), "read_error": str(read_err)}), 500
         return jsonify({"error": str(e)}), 500
 
-@auth_bp.route('/forgot-password', methods=['POST'])
-def forgot_password():
-    try:
-        data = request.get_json() or {}
-        email = data.get('email')
-        
-        if not email:
-            return jsonify({"error": "Email is required"}), 400
-            
-        user = mongo.db.users.find_one({"email": email})
-        if not user:
-            return jsonify({"error": "User with this email does not exist"}), 404
-            
-        # Generate 6 digit code
-        code = f"{random.randint(100000, 999999)}"
-        expires_at = datetime.utcnow() + timedelta(minutes=15)
-        
-        # Save code to DB
-        mongo.db.users.update_one(
-            {"email": email},
-            {"$set": {"reset_code": code, "reset_code_expires": expires_at}}
-        )
-        
-        # Send email
-        subject = "Reset your ViralScore Password 🔑"
-        body_text = f"Hi {user['name']},\n\nYou requested to reset your password. Use the following 6-digit verification code to complete the reset process:\n\n{code}\n\nThis code will expire in 15 minutes. If you did not request this, please ignore this email."
-        
-        body_html = f"""
-        <div style="font-family: Arial, sans-serif; padding: 20px; color: #1e293b; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff;">
-            <h2 style="color: #6366f1; margin-top: 0;">ViralScore Password Reset</h2>
-            <p>Hi {user['name']},</p>
-            <p>You requested to reset your password. Use the following 6-digit verification code to complete the reset process:</p>
-            <div style="font-size: 24px; font-weight: bold; background: #f1f5f9; padding: 12px; border-radius: 8px; text-align: center; color: #6366f1; border: 1px solid #e2e8f0; margin: 20px 0; letter-spacing: 4px;">
-                {code}
-            </div>
-            <p>This code will expire in <strong>15 minutes</strong>.</p>
-            <p style="color: #64748b; font-size: 12px; margin-top: 30px;">If you did not request this, you can safely ignore this email.</p>
-        </div>
-        """
-        
-        send_notification_email(email, subject, body_text, body_html)
-        
-        return jsonify({"message": "Verification code sent to your email"}), 200
-    except Exception as e:
-        print(f"❌ Forgot Password error: {e}")
-        return jsonify({"error": f"Internal Server Error: {str(e)}"}), 500
 
-@auth_bp.route('/reset-password', methods=['POST'])
-def reset_password():
-    try:
-        data = request.get_json() or {}
-        email = data.get('email')
-        code = data.get('code')
-        new_password = data.get('new_password')
-        
-        if not email or not code or not new_password:
-            return jsonify({"error": "Email, code, and new password are required"}), 400
-            
-        user = mongo.db.users.find_one({"email": email})
-        if not user:
-            return jsonify({"error": "User not found"}), 404
-            
-        db_code = user.get("reset_code")
-        db_expires = user.get("reset_code_expires")
-        
-        if not db_code or not db_expires:
-            return jsonify({"error": "No password reset requested for this account"}), 400
-            
-        if db_code != str(code).strip():
-            return jsonify({"error": "Invalid verification code"}), 400
-            
-        if datetime.utcnow() > db_expires:
-            return jsonify({"error": "Verification code has expired"}), 400
-            
-        # Update password
-        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-        mongo.db.users.update_one(
-            {"email": email},
-            {
-                "$set": {"password": hashed_password},
-                "$unset": {"reset_code": "", "reset_code_expires": ""}
-            }
-        )
-        
-        # Send confirmation email
-        subject = "Password Changed Successfully 🔒"
-        body_text = f"Hi {user['name']},\n\nYour ViralScore account password was successfully changed. If this wasn't you, please contact support immediately."
-        body_html = f"""
-        <div style="font-family: Arial, sans-serif; padding: 20px; color: #1e293b; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff;">
-            <h2 style="color: #6366f1; margin-top: 0;">Password Changed</h2>
-            <p>Hi {user['name']},</p>
-            <p>Your ViralScore account password was successfully changed.</p>
-            <p style="color: #ef4444;">If you did not make this change, please contact support or reset your password immediately.</p>
-        </div>
-        """
-        send_notification_email(email, subject, body_text, body_html)
-        
-        return jsonify({"message": "Password reset successful"}), 200
-    except Exception as e:
-        print(f"❌ Reset Password error: {e}")
-        return jsonify({"error": f"Internal Server Error: {str(e)}"}), 500
