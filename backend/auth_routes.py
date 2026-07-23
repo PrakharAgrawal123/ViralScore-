@@ -199,19 +199,21 @@ def google_login():
     client_id = os.getenv("GOOGLE_CLIENT_ID")
     redirect_uri = request.url_root.rstrip('/') + "/auth/google/callback"
     
-    # Store the referrer (frontend origin) in session
-    referer = request.headers.get("Referer")
-    if referer:
-        from urllib.parse import urlparse
-        parsed = urlparse(referer)
-        frontend_url = f"{parsed.scheme}://{parsed.netloc}"
-    else:
-        frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    # Read frontend origin dynamically from query parameters or referer header
+    frontend_url = request.args.get('frontend_url')
+    if not frontend_url:
+        referer = request.headers.get("Referer")
+        if referer:
+            from urllib.parse import urlparse
+            parsed = urlparse(referer)
+            frontend_url = f"{parsed.scheme}://{parsed.netloc}"
+        else:
+            frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+            
     session["frontend_url"] = frontend_url
     
     # If no Google credentials configured, execute simulation/dev fallback
     if not client_id:
-        frontend_url = session.get("frontend_url") or os.getenv("FRONTEND_URL", "http://localhost:5173")
         demo_user = {
             "name": "Google Creator",
             "email": "google@creator.io",
@@ -231,12 +233,13 @@ def google_login():
         return redirect(f"{frontend_url}/login?token={token}")
         
     google_auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
+    # Pass frontend_url directly as OAuth state to bypass cross-site cookie restrictions
     params = {
         "client_id": client_id,
         "redirect_uri": redirect_uri,
         "response_type": "code",
         "scope": "openid email profile",
-        "state": "state"
+        "state": frontend_url
     }
     url = f"{google_auth_url}?{urllib.parse.urlencode(params)}"
     return redirect(url)
@@ -334,7 +337,16 @@ def google_callback():
             send_notification_email(email, subject, body_text, body_html)
             
         token = create_access_token(identity=user_id)
-        frontend_url = session.get("frontend_url") or os.getenv("FRONTEND_URL", "http://localhost:5173")
+        
+        # Determine the frontend redirect URL: first check OAuth state param, then session, then env var
+        state = request.args.get('state')
+        frontend_url = None
+        if state and (state.startswith("http://") or state.startswith("https://")):
+            frontend_url = state
+            
+        if not frontend_url:
+            frontend_url = session.get("frontend_url") or os.getenv("FRONTEND_URL", "http://localhost:5173")
+            
         return redirect(f"{frontend_url}/login?token={token}")
         
     except Exception as e:
